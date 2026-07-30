@@ -16,14 +16,15 @@ It works as a Claude Code workspace: the agent instructions live in `CLAUDE.md` 
 
 ## Web UI
 
-A minimal web interface (question box, client-file upload, corpus browser, one-click CbCR analysis):
+A minimal web interface (question box, client-file upload, corpus browser, one-click CbCR analysis).
+
+**One-command start** (creates a virtualenv and installs dependencies on first run, then opens the browser):
 
 ```bash
-pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...   # required only for the chat; upload/analysis work without it
-uvicorn app.main:app
-# open http://localhost:8000
+./start_taxpilot.sh          # Mac/Linux — double-click start_taxpilot.bat on Windows
 ```
+
+Set `ANTHROPIC_API_KEY` first to enable the chat (get one at console.anthropic.com); upload, analysis and the corpus browser work without it. Manual alternative: `pip install -r requirements.txt && uvicorn app.main:app`, then open http://localhost:8000.
 
 The chat grounds every answer in the corpus (full official texts passed with prompt caching) and applies the same citation rules as the agent (`app/context.py`).
 
