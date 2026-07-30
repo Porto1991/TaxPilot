@@ -1,65 +1,79 @@
-# Catálogo del corpus normativo de TaxPilot
-# Regla: ningún documento se cita si no está registrado aquí.
+# TaxPilot regulatory corpus catalogue
+# Rule: no document may be cited unless it is registered here.
 
-documentos:
-  - id: ue-2021-2101
-    titulo: "Directiva (UE) 2021/2101 del Parlamento Europeo y del Consejo, de 24 de noviembre de 2021 (public CbCR)"
-    descripcion: >
-      Modifica la Directiva 2013/34/UE introduciendo el Capítulo 10 bis (arts. 48 bis a 48 nonies):
-      obligación de publicar el informe relativo al impuesto sobre sociedades para grupos y empresas
-      con ingresos consolidados > 750 M EUR.
-    fichero: ue/2021-2101_directiva_public_cbcr_ES.pdf
-    jurisdiccion: UE
-    idioma: es
-    rango: directiva
-    fecha_publicacion: 2021-12-01        # DOUE L 429/1
-    entrada_en_vigor: 2021-12-21          # 20 días tras publicación (art. 3)
-    plazo_transposicion: 2023-06-22       # art. 2
-    primer_ejercicio_aplicable: "primer ejercicio iniciado a partir del 2024-06-22 (art. 48 octies)"
-    fuente_oficial: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32021L2101"
-    verificado: true
-    fecha_incorporacion: 2026-07-30
+documents:
+  - id: eu-2021-2101-en
+    title: "Directive (EU) 2021/2101 of the European Parliament and of the Council of 24 November 2021 (public CbCR) — English"
+    description: >
+      Amends Directive 2013/34/EU by inserting Chapter 10a (Arts. 48a to 48h): obligation to
+      publish the report on income tax information for groups and undertakings with consolidated
+      revenue > EUR 750 million.
+    file: eu/2021-2101_directive_public_cbcr_EN.pdf
+    jurisdiction: EU
+    language: en
+    rank: directive
+    publication_date: 2021-12-01          # OJ L 429/1
+    entry_into_force: 2021-12-21           # 20 days after publication (Art. 3)
+    transposition_deadline: 2023-06-22     # Art. 2
+    first_financial_year: "first financial year starting on or after 2024-06-22 (Art. 48g)"
+    official_source: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021L2101"
+    verified: true
+    added_on: 2026-07-30
+
+  - id: eu-2021-2101-es
+    title: "Directiva (UE) 2021/2101 — Spanish official version (equally authentic)"
+    description: >
+      Same instrument as eu-2021-2101-en, Spanish language version from EUR-Lex. Article
+      numbering in Spanish uses 48 bis/ter/quater/quinquies/sexies/septies/octies/nonies,
+      mapping one-to-one to 48a-48h in the English version.
+    file: eu/2021-2101_directive_public_cbcr_ES.pdf
+    jurisdiction: EU
+    language: es
+    rank: directive
+    official_source: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32021L2101"
+    verified: true
+    added_on: 2026-07-30
 
   - id: es-ley-22-2015-da11
-    titulo: "Ley 22/2015, de 20 de julio, de Auditoría de Cuentas — texto consolidado (BOE). Transposición española del public CbCR: disposición adicional undécima"
-    descripcion: >
-      La DA 11ª (págs. 80-85 del PDF consolidado) regula la obligación de informar acerca del
-      impuesto sobre sociedades o impuestos de naturaleza idéntica o análoga por parte de
-      determinadas empresas y sucursales. Introducida por la Ley 28/2022, de 21 de diciembre,
-      de fomento del ecosistema de las empresas emergentes ("ley de startups"), que transpone
-      la Directiva (UE) 2021/2101. Estructura: Primero (obligados), Segundo (contenido),
-      Tercero (publicación y accesibilidad), Cuarto (responsabilidad), Quinto (primer ejercicio).
-    fichero: es/ley-22-2015_auditoria_consolidada_ES.pdf
-    jurisdiccion: ES
-    idioma: es
-    rango: ley
-    norma_de_introduccion: "Ley 28/2022, de 21 de diciembre (BOE-A-2022-21739)"
-    primer_ejercicio_aplicable: "ejercicios económicos iniciados a partir del 2024-06-22 (DA 11ª, apartado quinto)"
-    particularidades_vs_directiva:
-      - "Plazo de aprobación y publicación: 6 MESES desde el cierre del ejercicio (DA 11ª, ap. tercero.1) — más estricto que los 12 meses del art. 48 quinquies de la Directiva"
-      - "Depósito obligatorio en el Registro Mercantil junto con las cuentas anuales (DA 11ª, ap. tercero.1)"
-      - "Filiales obligadas: las que NO tengan consideración de entidad pequeña según umbrales del art. 3 de la Ley 22/2015 (DA 11ª, ap. primero.4)"
-      - "Umbral: importe neto de la cifra anual de negocios (INCN) consolidada > 750 M EUR en cada uno de los dos últimos ejercicios consecutivos"
-      - "La información puede comunicarse según las instrucciones del modelo 231 (art. 14 RIS, RD 634/2015 y Orden HFP/1978/2016) (DA 11ª, ap. segundo.3)"
-      - "Concepto de dominante última anclado al art. 42 del Código de Comercio"
-    fuente_oficial: "https://www.boe.es/buscar/act.php?id=BOE-A-2015-8147"
-    verificado: true
-    fecha_incorporacion: 2026-07-30
+    title: "Ley 22/2015, de 20 de julio, de Auditoría de Cuentas — consolidated text (BOE). Spanish public CbCR transposition: eleventh additional provision (DA 11ª)"
+    description: >
+      The DA 11ª (pp. 80-85 of the consolidated PDF) governs the obligation to report on
+      corporate income tax (or taxes of identical or analogous nature) by certain undertakings
+      and branches. Inserted by Ley 28/2022 of 21 December (the "startups law"), transposing
+      Directive (EU) 2021/2101. Structure: Primero (scope), Segundo (content), Tercero
+      (publication and accessibility), Cuarto (responsibility), Quinto (first financial year).
+      Only official in Spanish.
+    file: es/ley-22-2015_auditoria_consolidada_ES.pdf
+    jurisdiction: ES
+    language: es
+    rank: law
+    inserted_by: "Ley 28/2022, de 21 de diciembre (BOE-A-2022-21739)"
+    first_financial_year: "financial years starting on or after 2024-06-22 (DA 11ª, ap. quinto)"
+    specifics_vs_directive:
+      - "Approval and publication deadline: 6 MONTHS from financial year end (DA 11ª, ap. tercero.1) — stricter than the 12 months of Art. 48d of the Directive"
+      - "Mandatory filing with the Registro Mercantil together with the annual accounts (DA 11ª, ap. tercero.1)"
+      - "Subsidiaries in scope: those NOT qualifying as a small entity under the thresholds of Art. 3 of Ley 22/2015 (DA 11ª, ap. primero.4)"
+      - "Threshold: consolidated net turnover (INCN) > EUR 750 million in each of the last two consecutive financial years"
+      - "Information may be reported following the modelo 231 instructions (Art. 14 RIS, RD 634/2015 and Orden HFP/1978/2016) (DA 11ª, ap. segundo.3)"
+      - "Ultimate parent concept anchored to Art. 42 of the Código de Comercio"
+    official_source: "https://www.boe.es/buscar/act.php?id=BOE-A-2015-8147"
+    verified: true
+    added_on: 2026-07-30
 
-pendientes:
-  # Documentos identificados pero aún no incorporados al corpus.
-  - jurisdiccion: ES
-    descripcion: >
-      Resolución de 19 de mayo de 2026, de la DGSJFP, con los modelos para la presentación en el
-      Registro Mercantil de las cuentas anuales consolidadas (BOE-A-2026-11582, BOE 29/05/2026) y
-      su equivalente para cuentas individuales (BOE-A-2026-11581). Verificar si incluyen el modelo
-      de depósito del informe de la DA 11ª.
-  - jurisdiccion: ES
-    descripcion: >
-      Consulta 5 del BOICAC 144 (diciembre 2025): criterio del ICAC sobre filial española con
-      dominante última en otro Estado miembro (rige la normativa del Estado de la dominante).
-      Localizar el texto oficial en icac.gob.es e incorporarlo.
-  - jurisdiccion: UE
-    descripcion: "Conclusiones del Consejo — lista revisada de la UE de países y territorios no cooperadores (Anexos I y II, versión vigente)"
-  - jurisdiccion: UE
-    descripcion: "Reglamento de Ejecución de la Comisión con la plantilla común y formatos electrónicos (art. 48 quater, ap. 4)"
+pending:
+  # Documents identified but not yet added to the corpus.
+  - jurisdiction: ES
+    description: >
+      Resolution of 19 May 2026 of the DGSJFP with the templates for filing consolidated annual
+      accounts with the Registro Mercantil (BOE-A-2026-11582, BOE 29/05/2026) and its equivalent
+      for individual accounts (BOE-A-2026-11581). Check whether they include the filing template
+      for the DA 11ª report.
+  - jurisdiction: ES
+    description: >
+      ICAC query 5 of BOICAC 144 (December 2025): criterion on a Spanish subsidiary whose
+      ultimate parent is in another Member State (the parent's Member State rules govern).
+      Locate the official text at icac.gob.es and add it.
+  - jurisdiction: EU
+    description: "Council Conclusions — revised EU list of non-cooperative jurisdictions (Annexes I and II, current version)"
+  - jurisdiction: EU
+    description: "Commission Implementing Regulation with the common template and machine-readable electronic formats (Art. 48c(4))"
