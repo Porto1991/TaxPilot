@@ -44,6 +44,9 @@ def grounding_blocks():
         ("EU LIST OF NON-COOPERATIVE JURISDICTIONS — VERIFIED SNAPSHOTS "
          "(corpus/eu/eu_list_snapshots.yaml)",
          (REPO / "corpus" / "eu" / "eu_list_snapshots.yaml").read_text()),
+        ("ICAC CRITERION — BOICAC 144/2025 QUERY 5 (official, Spanish): ultimate parent "
+         "resident in another Member State → that State's rules and deadlines govern",
+         _pdf_text(REPO / "corpus" / "es" / "boicac144_consulta5_icac_ES.pdf")),
         ("JURISDICTION MATRIX (knowledge/pcbcr_jurisdiction_matrix.xlsx, TSV export; "
          "SECONDARY SOURCE — check the Verification status column)",
          _matrix_tsv()),

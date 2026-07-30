@@ -75,6 +75,55 @@ documents:
     verified: true
     added_on: 2026-07-30
 
+  - id: eu-2024-2952
+    title: "Commission Implementing Regulation (EU) 2024/2952 of 29 November 2024 — common template and electronic reporting formats for public CbCR"
+    description: >
+      Lays down the mandatory common template and machine-readable electronic (XBRL) reporting
+      formats required by Art. 48c(4) of Directive 2013/34/EU. Undertakings must apply it to
+      reports on income tax information for financial years starting on or after 1 January 2025
+      (Art. 5, transitional provisions). The Commission published the reporting package
+      (taxonomy) on 22 December 2025.
+    file: eu/2024-2952_implementing_regulation_template_EN.pdf
+    jurisdiction: EU
+    language: en
+    rank: implementing-regulation
+    first_financial_year: "financial years starting on or after 2025-01-01 (Art. 5)"
+    official_source: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2952"
+    verified: true
+    added_on: 2026-07-30
+
+  - id: es-boicac-144-c5
+    title: "ICAC — BOICAC No. 144/2025, query 5: publication obligation under DA 11ª when the ultimate parent is resident in another Member State"
+    description: >
+      Official ICAC criterion (published 19 Jan 2026): where the ultimate parent is resident in
+      another Member State (Italy in the query), the obligation to draw up, approve and publish
+      the public CbCR report is governed by THAT Member State's law and deadlines — the Spanish
+      6-month deadline of DA 11ª ap. tercero does not bind the Spanish subsidiary, which may
+      file its annual accounts with the Registro Mercantil without waiting for the parent's
+      publication.
+    file: es/boicac144_consulta5_icac_ES.pdf
+    jurisdiction: ES
+    language: es
+    rank: administrative-criterion
+    official_source: "https://www.icac.gob.es/sites/default/files/2026-01/Consulta%205%20rv.pdf"
+    verified: true
+    added_on: 2026-07-30
+
+  - id: es-dgsjfp-2026
+    title: "Resolución de 19 de mayo de 2026, DGSJFP — modelos de presentación en el Registro Mercantil de las cuentas anuales consolidadas (BOE-A-2026-11582)"
+    description: >
+      Includes the standardised model «IP» (información relativa al impuesto de sociedades —
+      presentación de información por países) for filing the DA 11ª public CbCR report with the
+      Registro Mercantil, plus a checkbox in the filing request form. References the EU public
+      CbCR XBRL taxonomy published by the Commission on 22 December 2025 (Annexes II-III).
+    file: es/dgsjfp-2026-05-19_modelos_cuentas_consolidadas_RM_ES.pdf
+    jurisdiction: ES
+    language: es
+    rank: resolution
+    official_source: "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-11582"
+    verified: true
+    added_on: 2026-07-30
+
 secondary_sources:
   # Working references — NOT normative truth. Verify against official texts before client use.
   - id: knowledge-matrix
@@ -90,16 +139,7 @@ secondary_sources:
 
 pending:
   # Documents identified but not yet added to the corpus.
-  - jurisdiction: ES
-    description: >
-      Resolution of 19 May 2026 of the DGSJFP with the templates for filing consolidated annual
-      accounts with the Registro Mercantil (BOE-A-2026-11582, BOE 29/05/2026) and its equivalent
-      for individual accounts (BOE-A-2026-11581). Check whether they include the filing template
-      for the DA 11ª report.
-  - jurisdiction: ES
-    description: >
-      ICAC query 5 of BOICAC 144 (December 2025): criterion on a Spanish subsidiary whose
-      ultimate parent is in another Member State (the parent's Member State rules govern).
-      Locate the official text at icac.gob.es and add it.
   - jurisdiction: EU
-    description: "Commission Implementing Regulation with the common template and machine-readable electronic formats (Art. 48c(4))"
+    description: >
+      Regulatory watch: EU list of non-cooperative jurisdictions is revised each February and
+      October (next: October 2026) — refresh eu_list_snapshots.yaml after each revision.
