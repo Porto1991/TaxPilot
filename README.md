@@ -14,6 +14,19 @@ It works as a Claude Code workspace: the agent instructions live in `CLAUDE.md` 
 | `templates/` | Corporate templates for deliverables |
 | `scripts/` | Programmatic analysis tools (e.g. CbCR Excel validator) |
 
+## Web UI
+
+A minimal web interface (question box, client-file upload, corpus browser, one-click CbCR analysis):
+
+```bash
+pip install -r requirements.txt
+export ANTHROPIC_API_KEY=sk-ant-...   # required only for the chat; upload/analysis work without it
+uvicorn app.main:app
+# open http://localhost:8000
+```
+
+The chat grounds every answer in the corpus (full official texts passed with prompt caching) and applies the same citation rules as the agent (`app/context.py`).
+
 ## Typical usage
 
 1. **Regulatory query**: ask directly in the chat ("What is the publication deadline for a Spanish subsidiary of a US parent?"). The agent answers with citations to specific articles in the corpus.
