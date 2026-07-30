@@ -34,6 +34,13 @@ When a question concerns Spain, apply the eleventh additional provision (DA 11ª
 - ICAC criterion (BOICAC 144, query 5, not yet in corpus): Spanish subsidiary with its ultimate parent in another Member State → the parent's Member State rules and deadlines govern.
 - The Spanish law is only official in Spanish. When drafting in English, quote the Spanish provision and provide a courtesy translation marked as unofficial.
 
+## Quick-reference jurisdiction matrix
+
+`knowledge/pcbcr_jurisdiction_matrix.xlsx` compares implementation across the EU-27 (+EEA) and Australia (thresholds, deadlines, publication, deferrals, penalties). Use `scripts/query_matrix.py <jurisdiction> [field]` for surgical cell lookups. Rules:
+
+- Always report the **Verification status** of the row alongside the data: green rows are corpus-verified; amber rows come from secondary sources (PwC tracker / advisory alerts) and must be flagged "pending verification against the official text" in any client-facing answer.
+- On any conflict, the **corpus always overrides the matrix**.
+
 ## Workflows
 
 ### Regulatory query (consultant question or client email)

@@ -60,6 +60,19 @@ documents:
     verified: true
     added_on: 2026-07-30
 
+secondary_sources:
+  # Working references — NOT normative truth. Verify against official texts before client use.
+  - id: knowledge-matrix
+    title: "Public CbCR jurisdiction matrix (EU-27 + EEA + Australia)"
+    file: ../knowledge/pcbcr_jurisdiction_matrix.xlsx
+    description: >
+      Comparison of thresholds, deadlines, publication channels, deferrals and penalties per
+      jurisdiction. EU Directive and Spain rows verified against the corpus; all other rows
+      compiled from the PwC EU public CbCR tracker (full-data PDF generated 26 June 2026,
+      https://www.pwc.com/gx/en/tax/pcbcr/pwc-pcbcr-tracker-full-data.pdf) and advisory alerts
+      (Australia). Query tool: scripts/query_matrix.py.
+    added_on: 2026-07-30
+
 pending:
   # Documents identified but not yet added to the corpus.
   - jurisdiction: ES
