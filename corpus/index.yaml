@@ -1,0 +1,30 @@
+# Catálogo del corpus normativo de TaxPilot
+# Regla: ningún documento se cita si no está registrado aquí.
+
+documentos:
+  - id: ue-2021-2101
+    titulo: "Directiva (UE) 2021/2101 del Parlamento Europeo y del Consejo, de 24 de noviembre de 2021 (public CbCR)"
+    descripcion: >
+      Modifica la Directiva 2013/34/UE introduciendo el Capítulo 10 bis (arts. 48 bis a 48 nonies):
+      obligación de publicar el informe relativo al impuesto sobre sociedades para grupos y empresas
+      con ingresos consolidados > 750 M EUR.
+    fichero: ue/2021-2101_directiva_public_cbcr_ES.pdf
+    jurisdiccion: UE
+    idioma: es
+    rango: directiva
+    fecha_publicacion: 2021-12-01        # DOUE L 429/1
+    entrada_en_vigor: 2021-12-21          # 20 días tras publicación (art. 3)
+    plazo_transposicion: 2023-06-22       # art. 2
+    primer_ejercicio_aplicable: "primer ejercicio iniciado a partir del 2024-06-22 (art. 48 octies)"
+    fuente_oficial: "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32021L2101"
+    verificado: true
+    fecha_incorporacion: 2026-07-30
+
+pendientes:
+  # Documentos identificados pero aún no incorporados al corpus.
+  - jurisdiccion: ES
+    descripcion: "Transposición española de la Directiva 2021/2101 (verificar estado y referencia exacta en BOE antes de incorporar)"
+  - jurisdiccion: UE
+    descripcion: "Conclusiones del Consejo — lista revisada de la UE de países y territorios no cooperadores (Anexos I y II, versión vigente)"
+  - jurisdiccion: UE
+    descripcion: "Reglamento de Ejecución de la Comisión con la plantilla común y formatos electrónicos (art. 48 quater, ap. 4)"
