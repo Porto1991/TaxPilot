@@ -1,0 +1,55 @@
+# EU list of non-cooperative jurisdictions for tax purposes — machine-readable snapshots.
+# Verified against the official European Commission overview PDF in this folder
+# (eu-list-non-cooperative_2026-02_EN.pdf), which records every revision.
+#
+# Relevance for public CbCR [Directive (EU) 2021/2101, Art. 48c(5)]:
+#   - Annex I: report separately each jurisdiction listed on 1 March of the financial year
+#     FOR WHICH the report is drawn up.
+#   - Annex II: report separately each jurisdiction listed on 1 March of that financial year
+#     AND on 1 March of the preceding financial year (two-year rule).
+#   - Safeguard clause omissions are NEVER allowed for Annex I/II jurisdictions [Art. 48c(6)].
+#
+# NOTE (flagged ambiguity): updates are adopted by the Council in February and October and
+# published in the OJ some days later (e.g. the 17 Feb 2026 revision was published on
+# 6 March 2026). For a 1-March test falling between adoption and OJ publication, both
+# readings should be presented to the client.
+
+source:
+  official_pdf: eu-list-non-cooperative_2026-02_EN.pdf
+  official_urls:
+    - "https://taxation-customs.ec.europa.eu/document/download/3ceac073-5184-46a0-864a-b3038e4d9a6b_en?filename=eu_list_update_17-02-2026.pdf"
+    - "https://www.consilium.europa.eu/en/policies/eu-list-of-non-cooperative-jurisdictions/"
+  verified: true
+  added_on: 2026-07-30
+
+updates:
+  - adopted: 2024-02-20
+    annex_i: [American Samoa, Anguilla, Antigua and Barbuda, Fiji, Guam, Palau, Panama,
+              Russian Federation, Samoa, Trinidad and Tobago, US Virgin Islands, Vanuatu]
+    annex_ii: [Armenia, Belize, British Virgin Islands, Costa Rica, Curaçao, Eswatini,
+               Malaysia, Seychelles, Türkiye, Viet Nam]
+
+  - adopted: 2024-10-08
+    annex_i: [American Samoa, Anguilla, Fiji, Guam, Palau, Panama, Russian Federation,
+              Samoa, Trinidad and Tobago, US Virgin Islands, Vanuatu]
+    annex_ii: [Antigua and Barbuda, Belize, British Virgin Islands, Costa Rica, Curaçao,
+               Eswatini, Seychelles, Türkiye, Viet Nam]
+
+  - adopted: 2025-02-18
+    annex_i: [American Samoa, Anguilla, Fiji, Guam, Palau, Panama, Russian Federation,
+              Samoa, Trinidad and Tobago, US Virgin Islands, Vanuatu]
+    annex_ii: [Antigua and Barbuda, Belize, British Virgin Islands, Brunei Darussalam,
+               Eswatini, Seychelles, Türkiye, Viet Nam]
+
+  - adopted: 2025-10-10
+    annex_i: [American Samoa, Anguilla, Fiji, Guam, Palau, Panama, Russian Federation,
+              Samoa, Trinidad and Tobago, US Virgin Islands, Vanuatu]
+    annex_ii: [Antigua and Barbuda, Belize, British Virgin Islands, Brunei Darussalam,
+               Eswatini, Greenland, Jordan, Montenegro, Morocco, Seychelles, Türkiye]
+
+  - adopted: 2026-02-17
+    published_oj: 2026-03-06
+    annex_i: [American Samoa, Anguilla, Guam, Palau, Panama, Russian Federation,
+              Turks and Caicos Islands, US Virgin Islands, Vanuatu, Viet Nam]
+    annex_ii: [Belize, British Virgin Islands, Brunei Darussalam, Eswatini, Greenland,
+               Jordan, Montenegro, Morocco, Türkiye]

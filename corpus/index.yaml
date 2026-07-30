@@ -60,6 +60,21 @@ documents:
     verified: true
     added_on: 2026-07-30
 
+  - id: eu-list-non-cooperative
+    title: "EU list of non-cooperative jurisdictions for tax purposes — official Commission overview (all revisions up to 17 Feb 2026)"
+    description: >
+      Official European Commission record of every revision of the EU list (Annexes I and II),
+      most recent: adopted 17 Feb 2026, published in the OJ on 6 Mar 2026. Machine-readable
+      snapshots extracted (and verified against this PDF) in eu_list_snapshots.yaml, used by
+      scripts/analyze_cbcr_excel.py to apply the 1-March rule of Art. 48c(5).
+    file: eu/eu-list-non-cooperative_2026-02_EN.pdf
+    jurisdiction: EU
+    language: en
+    rank: council-conclusions-record
+    official_source: "https://taxation-customs.ec.europa.eu/document/download/3ceac073-5184-46a0-864a-b3038e4d9a6b_en?filename=eu_list_update_17-02-2026.pdf"
+    verified: true
+    added_on: 2026-07-30
+
 secondary_sources:
   # Working references — NOT normative truth. Verify against official texts before client use.
   - id: knowledge-matrix
@@ -87,6 +102,5 @@ pending:
       ultimate parent is in another Member State (the parent's Member State rules govern).
       Locate the official text at icac.gob.es and add it.
   - jurisdiction: EU
-    description: "Council Conclusions — revised EU list of non-cooperative jurisdictions (Annexes I and II, current version)"
   - jurisdiction: EU
     description: "Commission Implementing Regulation with the common template and machine-readable electronic formats (Art. 48c(4))"

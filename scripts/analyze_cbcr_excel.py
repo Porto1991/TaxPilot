@@ -1,19 +1,28 @@
 #!/usr/bin/env python3
 """Structural check of an Excel file containing public CbCR data.
 
-Checks the content against the elements required by Art. 48c(2) of
-Directive 2013/34/EU (as inserted by Directive (EU) 2021/2101).
+Checks the content against Art. 48c of Directive 2013/34/EU (as inserted by
+Directive (EU) 2021/2101):
+  - required fields of Art. 48c(2), per tax jurisdiction;
+  - jurisdiction classification under Art. 48c(5): EU Member State / Annex I
+    (1 March of the reporting FY) / Annex II (two-year rule) / other;
+  - totals consistency (Total row vs sum of jurisdiction rows).
 
 Usage:
-    python3 scripts/analyze_cbcr_excel.py clients/file.xlsx
+    python3 scripts/analyze_cbcr_excel.py clients/file.xlsx [--fy 2025]
 """
+import re
 import sys
 import unicodedata
+from datetime import date
+from pathlib import Path
 
+import yaml
 from openpyxl import load_workbook
 
-# Elements of Art. 48c(2) that must be broken down per tax jurisdiction,
-# with common column-header synonyms (EN/ES) to locate them.
+REPO = Path(__file__).resolve().parent.parent
+SNAPSHOTS = REPO / "corpus" / "eu" / "eu_list_snapshots.yaml"
+
 REQUIRED_FIELDS = {
     "tax jurisdiction": ["jurisdiction", "jurisdiccion", "country", "pais", "territorio", "tax jurisdiction"],
     "employees (FTE)": ["employees", "empleados", "fte", "headcount", "plantilla"],
@@ -24,19 +33,35 @@ REQUIRED_FIELDS = {
     "accumulated earnings [(2)(h)]": ["accumulated earnings", "retained earnings", "reservas", "beneficios no distribuidos"],
 }
 
-# EU-27 Member States: Art. 48c(5) requires an individual breakdown for each
-# of them (never aggregated). Names matched in English and Spanish.
-MEMBER_STATES = [
-    "austria", "belgium", "belgica", "bulgaria", "croatia", "croacia",
-    "cyprus", "chipre", "czechia", "czech republic", "chequia", "republica checa",
-    "denmark", "dinamarca", "estonia", "finland", "finlandia", "france", "francia",
-    "germany", "alemania", "greece", "grecia", "hungary", "hungria",
-    "ireland", "irlanda", "italy", "italia", "latvia", "letonia",
-    "lithuania", "lituania", "luxembourg", "luxemburgo", "malta",
-    "netherlands", "paises bajos", "poland", "polonia", "portugal",
-    "romania", "rumania", "slovakia", "eslovaquia", "slovenia", "eslovenia",
-    "spain", "espana", "sweden", "suecia",
-]
+MEMBER_STATES = {
+    "austria": "Austria", "belgium": "Belgium", "belgica": "Belgium", "bulgaria": "Bulgaria",
+    "croatia": "Croatia", "croacia": "Croatia", "cyprus": "Cyprus", "chipre": "Cyprus",
+    "czechia": "Czechia", "czech republic": "Czechia", "chequia": "Czechia", "republica checa": "Czechia",
+    "denmark": "Denmark", "dinamarca": "Denmark", "estonia": "Estonia", "finland": "Finland",
+    "finlandia": "Finland", "france": "France", "francia": "France", "germany": "Germany",
+    "alemania": "Germany", "greece": "Greece", "grecia": "Greece", "hungary": "Hungary",
+    "hungria": "Hungary", "ireland": "Ireland", "irlanda": "Ireland", "italy": "Italy",
+    "italia": "Italy", "latvia": "Latvia", "letonia": "Latvia", "lithuania": "Lithuania",
+    "lituania": "Lithuania", "luxembourg": "Luxembourg", "luxemburgo": "Luxembourg",
+    "malta": "Malta", "netherlands": "Netherlands", "paises bajos": "Netherlands",
+    "poland": "Poland", "polonia": "Poland", "portugal": "Portugal", "romania": "Romania",
+    "rumania": "Romania", "slovakia": "Slovakia", "eslovaquia": "Slovakia",
+    "slovenia": "Slovenia", "eslovenia": "Slovenia", "spain": "Spain", "espana": "Spain",
+    "sweden": "Sweden", "suecia": "Sweden",
+}
+
+# Spanish/English aliases for jurisdictions relevant to the EU annexes.
+ALIASES = {
+    "islas caiman": "Cayman Islands", "cayman islands": "Cayman Islands",
+    "islas virgenes britanicas": "British Virgin Islands", "rusia": "Russian Federation",
+    "russia": "Russian Federation", "panama": "Panama", "vanuatu": "Vanuatu",
+    "guam": "Guam", "samoa americana": "American Samoa", "anguila": "Anguilla",
+    "islas turcas y caicos": "Turks and Caicos Islands", "vietnam": "Viet Nam",
+    "islas virgenes de los estados unidos": "US Virgin Islands", "belice": "Belize",
+    "turquia": "Türkiye", "turkiye": "Türkiye", "marruecos": "Morocco",
+    "groenlandia": "Greenland", "jordania": "Jordan", "montenegro": "Montenegro",
+    "suiza": "Switzerland", "switzerland": "Switzerland",
+}
 
 
 def normalize(text):
@@ -46,8 +71,34 @@ def normalize(text):
     return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
 
 
+def canonical(name):
+    n = normalize(name)
+    if n in MEMBER_STATES:
+        return MEMBER_STATES[n], "EU_MS"
+    if n in ALIASES:
+        return ALIASES[n], None
+    return str(name).strip(), None
+
+
+def load_annexes(fy):
+    """Annex I at 1 March of FY; Annex II at 1 March of FY and of FY-1 (two-year rule)."""
+    data = yaml.safe_load(SNAPSHOTS.read_text())
+    updates = sorted(data["updates"], key=lambda u: str(u["adopted"]))
+
+    def in_force(on):
+        applicable = [u for u in updates if str(u["adopted"]) <= on.isoformat()]
+        return applicable[-1] if applicable else None
+
+    s_now, s_prev = in_force(date(fy, 3, 1)), in_force(date(fy - 1, 3, 1))
+    if not s_now or not s_prev:
+        return None
+    annex1 = set(s_now["annex_i"])
+    annex2 = set(s_now["annex_ii"]) & set(s_prev["annex_ii"])
+    return {"annex1": annex1, "annex2_two_year": annex2,
+            "snapshot_now": str(s_now["adopted"]), "snapshot_prev": str(s_prev["adopted"])}
+
+
 def find_headers(sheet, max_rows=15):
-    """Locate the header row: the one matching the most required fields."""
     best = (0, None, {})
     for row in sheet.iter_rows(min_row=1, max_row=max_rows):
         found = {}
@@ -63,55 +114,89 @@ def find_headers(sheet, max_rows=15):
     return best[1], best[2]
 
 
-def analyze_sheet(sheet):
+def analyze_sheet(sheet, annexes):
     header_row, found = find_headers(sheet)
     if not found:
-        return None
+        return False
     missing = [f for f in REQUIRED_FIELDS if f not in found]
 
-    jurisdictions = []
+    print(f"── Sheet '{sheet.title}' (headers in row {header_row}) ──")
+    for field, (_, col, text) in found.items():
+        print(f"  ✓ {field}: column {col} ('{text}')")
+    for field in missing:
+        print(f"  ✗ MISSING: {field} — required by Art. 48c(2)")
+
     juris_col = found.get("tax jurisdiction", (None, None, None))[1]
-    if juris_col:
-        for row in sheet.iter_rows(min_row=header_row + 1, min_col=juris_col, max_col=juris_col):
-            v = normalize(row[0].value)
-            if v and v not in ("total", "totals", "totales"):
-                jurisdictions.append(v)
+    numeric_cols = [c for f, (_, c, _) in found.items() if f != "tax jurisdiction"]
+    if not juris_col:
+        print()
+        return True
 
-    return {
-        "sheet": sheet.title,
-        "header_row": header_row,
-        "found": found,
-        "missing": missing,
-        "jurisdictions": jurisdictions,
-    }
+    rows, total_row = [], None
+    for row in sheet.iter_rows(min_row=header_row + 1, min_col=1, max_col=sheet.max_column):
+        raw = row[juris_col - 1].value
+        n = normalize(raw)
+        if not n:
+            continue
+        if n in ("total", "totals", "totales"):
+            total_row = row
+        else:
+            rows.append(row)
+
+    # Classification under Art. 48c(5)
+    print(f"\n  Jurisdiction classification [Art. 48c(5)] — Annex I as of 1 Mar (snapshot "
+          f"{annexes['snapshot_now']}), Annex II two-year rule (also {annexes['snapshot_prev']}):")
+    for row in rows:
+        name, kind = canonical(row[juris_col - 1].value)
+        if kind == "EU_MS":
+            tag = "EU Member State — separate disclosure mandatory"
+        elif name in annexes["annex1"]:
+            tag = "⚠ ANNEX I — separate disclosure mandatory, safeguard-clause omission PROHIBITED [Art. 48c(6)]"
+        elif name in annexes["annex2_two_year"]:
+            tag = "⚠ ANNEX II (two-year rule) — separate disclosure mandatory, omission prohibited"
+        else:
+            tag = "Other jurisdiction — may be aggregated"
+        print(f"    · {name}: {tag}")
+
+    # Totals consistency
+    if total_row is not None:
+        print("\n  Totals consistency:")
+        for c in numeric_cols:
+            vals = [r[c - 1].value for r in rows if isinstance(r[c - 1].value, (int, float))]
+            declared = total_row[c - 1].value
+            if isinstance(declared, (int, float)):
+                s = sum(vals)
+                ok = abs(s - declared) < 0.5
+                mark = "✓" if ok else "✗"
+                head = sheet.cell(row=header_row, column=c).value
+                msg = f"    {mark} {head}: rows sum to {s:,.0f}, Total row says {declared:,.0f}"
+                if not ok:
+                    msg += f"  → DISCREPANCY of {declared - s:,.0f}"
+                print(msg)
+    else:
+        print("\n  · No Total row found — totals consistency not checked.")
+    print()
+    return True
 
 
-def main(path):
-    wb = load_workbook(path, data_only=True)
-    print(f"File: {path}")
-    print(f"Sheets: {', '.join(wb.sheetnames)}\n")
+def main(argv):
+    if len(argv) < 2:
+        print(__doc__)
+        return 2
+    path = argv[1]
+    fy = int(argv[argv.index("--fy") + 1]) if "--fy" in argv else 2025
 
-    results = [r for sheet in wb.worksheets if (r := analyze_sheet(sheet))]
-    if not results:
-        print("✗ No sheet with a CbCR report structure was found.")
-        print("  Review manually: the file may use a non-tabular layout.")
+    annexes = load_annexes(fy)
+    if annexes is None:
+        print(f"No EU-list snapshot available for FY{fy} in {SNAPSHOTS} — classification skipped.")
         return 1
 
-    for r in results:
-        print(f"── Sheet '{r['sheet']}' (headers in row {r['header_row']}) ──")
-        for field, (row, col, text) in r["found"].items():
-            print(f"  ✓ {field}: column {col} ('{text}')")
-        for field in r["missing"]:
-            print(f"  ✗ MISSING: {field} — required by Art. 48c(2)")
-
-        juris = r["jurisdictions"]
-        if juris:
-            eu_present = {j for j in juris if j in MEMBER_STATES}
-            print(f"  · {len(juris)} tax jurisdiction rows; {len(eu_present)} EU Member States identified")
-            print("  · Reminder [Art. 48c(5)]: an individual breakdown is mandatory for each")
-            print("    Member State and for each jurisdiction in Annexes I/II of the EU list of")
-            print("    non-cooperative jurisdictions; the rest may be aggregated.")
-        print()
+    wb = load_workbook(path, data_only=True)
+    print(f"File: {path}\nReporting FY: {fy}\nSheets: {', '.join(wb.sheetnames)}\n")
+    any_found = any(analyze_sheet(ws, annexes) for ws in wb.worksheets)
+    if not any_found:
+        print("✗ No sheet with a CbCR report structure was found. Review manually.")
+        return 1
 
     print("Note: automated structural check only. Substantive analysis (attribution per")
     print("jurisdiction, consistency with consolidated FS, currency, deadlines) requires expert review.")
@@ -119,7 +204,4 @@ def main(path):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(__doc__)
-        sys.exit(2)
-    sys.exit(main(sys.argv[1]))
+    sys.exit(main(sys.argv))
