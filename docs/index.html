@@ -4,109 +4,101 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TaxPilot — Public CbCR advisory</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e6b58'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='19' font-weight='bold' fill='%23f4efe3' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310a37f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='19' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 <style>
   :root{
-    --ground:#eef1ef; --surface:#fbfcfb; --panel:#f5f7f5; --ink:#161f1c; --ink-2:#48544f; --ink-3:#75817b;
-    --line:#dbe1dd; --line-2:#cbd4cf; --accent:#0d5f4e; --accent-2:#0a4a3d; --accent-soft:#e0ece7;
-    --gold:#8a6a1f; --warn:#9c6209; --warn-soft:#f6ead3; --crit:#a83a2e; --crit-soft:#f6e3df;
-    --shadow:0 1px 2px rgba(22,31,28,.05), 0 8px 24px -12px rgba(22,31,28,.18);
+    --ground:#ffffff; --surface:#ffffff; --panel:#f9f9f9; --ink:#0d0d0d; --ink-2:#5d5d5d; --ink-3:#8f8f8f;
+    --line:#ececec; --line-2:#d9d9d9; --accent:#10a37f; --accent-2:#0d8a6a; --accent-soft:#e7f6f1;
+    --bubble:#f4f4f4;
+    --warn:#b45309; --warn-soft:#fdf0dd; --crit:#c4402f; --crit-soft:#fdeceb;
+    --shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px -8px rgba(0,0,0,.08);
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-    --serif:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --serif:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+    --sans:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
   }
   @media (prefers-color-scheme: dark){
-    :root{--ground:#0f1412;--surface:#171d1a;--panel:#131917;--ink:#e8edea;--ink-2:#a9b4ae;--ink-3:#79857f;
-      --line:#28302c;--line-2:#333d38;--accent:#4fb096;--accent-2:#67c2a9;--accent-soft:#1b352d;
-      --gold:#cfa34a;--warn:#d29a3e;--warn-soft:#382c14;--crit:#dd7a6c;--crit-soft:#3a201b;
-      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5)}
+    :root{--ground:#212121;--surface:#2a2a2a;--panel:#171717;--ink:#ececec;--ink-2:#b4b4b4;--ink-3:#8f8f8f;
+      --line:#323232;--line-2:#424242;--accent:#19c37d;--accent-2:#2ad48c;--accent-soft:#12352a;
+      --bubble:#2f2f2f;
+      --warn:#e0a04c;--warn-soft:#3a2d16;--crit:#e0705f;--crit-soft:#3a211c;
+      --shadow:0 1px 2px rgba(0,0,0,.25), 0 6px 20px -10px rgba(0,0,0,.45)}
   }
   *{box-sizing:border-box}
   html{height:100%}
   body{margin:0;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--ground);
-    color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.55;
+    color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;
     -webkit-font-smoothing:antialiased}
-  body::before{content:"";position:fixed;top:0;left:0;right:0;height:3px;z-index:30;
-    background:linear-gradient(90deg,var(--accent),var(--accent) 55%,var(--gold))}
 
-  header{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--surface);
+  header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--ground);
     border-bottom:1px solid var(--line);flex-wrap:wrap}
-  header .logo{font-family:var(--serif);font-size:21px;font-weight:700;letter-spacing:.01em}
+  header .logo{font-size:18px;font-weight:700;letter-spacing:-.01em}
   header .logo span{color:var(--accent)}
-  header .sub{color:var(--ink-3);font-size:12.5px;letter-spacing:.01em}
+  header .sub{color:var(--ink-3);font-size:12.5px}
   #newchat{margin-left:auto}
-  #status{font-family:var(--mono);font-size:11px;padding:4px 11px;border-radius:99px;cursor:pointer;
+  #status{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;cursor:pointer;
     border:1px solid transparent}
   .st-ok{background:var(--accent-soft);color:var(--accent)}
   .st-warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
   .st-gear{background:transparent;color:var(--ink-3);font-size:15px;padding:2px 8px}
-  .st-gear:hover{color:var(--accent)}
+  .st-gear:hover{color:var(--ink)}
 
   main{flex:1;display:flex;min-height:0}
-  aside{width:312px;flex-shrink:0;border-right:1px solid var(--line);background:var(--panel);
-    padding:18px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:22px}
-  aside h3{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--ink-3);margin:0 0 10px;display:flex;align-items:center;gap:8px}
-  aside h3::after{content:"";flex:1;height:1px;background:var(--line)}
-  .doc{padding:9px 11px;border:1px solid var(--line);border-radius:8px;margin-bottom:7px;font-size:12.5px;
+  aside{width:300px;flex-shrink:0;border-right:1px solid var(--line);background:var(--panel);
+    padding:18px 14px;overflow-y:auto;display:flex;flex-direction:column;gap:22px}
+  aside h3{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-3);margin:0 0 10px}
+  .doc{padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:12.5px;
     background:var(--surface);transition:border-color .15s, box-shadow .15s;line-height:1.45}
   a.doc:hover{border-color:var(--accent);box-shadow:var(--shadow)}
   .doc .v{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--accent);margin-bottom:2px}
   .doc.sec .v{color:var(--warn)}
 
-  .keybox{border:1px solid var(--line-2);border-radius:10px;padding:14px;background:var(--surface);box-shadow:var(--shadow)}
+  .keybox{border:1px solid var(--line-2);border-radius:12px;padding:14px;background:var(--surface);box-shadow:var(--shadow)}
   .keybox p{font-size:12px;color:var(--ink-2);margin:0 0 8px}
-  .keybox input{width:100%;border:1px solid var(--line-2);border-radius:7px;padding:8px 10px;
+  .keybox input{width:100%;border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;
     font-family:var(--mono);font-size:12px;background:var(--ground);color:var(--ink)}
   .keybox .row{display:flex;gap:6px;margin-top:9px}
   button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);
-    border:none;border-radius:7px;padding:7px 14px;cursor:pointer;transition:background .15s}
+    border:none;border-radius:999px;padding:7px 16px;cursor:pointer;transition:background .15s}
   button:hover{background:var(--accent-2)}
   button.ghost, #newchat{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
-  button.ghost:hover, #newchat:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+  button.ghost:hover, #newchat:hover{background:var(--panel);color:var(--ink);border-color:var(--ink-3)}
   button:disabled{opacity:.5;cursor:default}
 
   #chat{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--ground)}
-  #thread{flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:16px}
-  #thread > *{width:100%;max-width:820px;margin-left:auto;margin-right:auto}
+  #thread{flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:18px}
+  #thread > *{width:100%;max-width:780px;margin-left:auto;margin-right:auto}
   .msg{white-space:pre-wrap;overflow-wrap:break-word}
-  .msg.user{max-width:820px}
-  .msg.user{display:flex;justify-content:flex-end}
-  .msg.user{background:none;padding:0}
-  .msg.user::before{content:none}
-  .msg.user{color:inherit}
-  .msg.user > span, .msg.user{font-size:14.5px}
-  .msg.user{--_pad:0}
-  .msg.user{border:none}
-  .u-in{background:var(--accent);color:#fff;padding:11px 16px;border-radius:14px 14px 4px 14px;
-    max-width:78%;box-shadow:var(--shadow)}
-  .msg.bot{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
-    border-radius:4px 12px 12px 4px;padding:16px 20px;box-shadow:var(--shadow)}
+  .msg.user{display:flex;justify-content:flex-end;background:none;border:none;padding:0}
+  .u-in{background:var(--bubble);color:var(--ink);padding:10px 16px;border-radius:18px;max-width:75%}
+  .msg.bot{background:transparent;border:none;padding:2px 4px}
   .msg b{font-weight:650}
-  .msg.bot h3{font-family:var(--serif);font-size:16.5px;margin:12px 0 5px;white-space:normal;color:var(--ink)}
+  .msg.bot h3{font-size:15.5px;font-weight:700;margin:14px 0 5px;white-space:normal;color:var(--ink)}
   .msg.bot h3:first-child{margin-top:0}
   .msg.bot ul{margin:4px 0;padding-left:20px;white-space:normal}
   .msg.bot li{margin:3px 0;white-space:pre-wrap}
   .msg.bot .cite{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);
-    border-radius:4px;padding:1.5px 6px;white-space:normal}
+    border-radius:5px;padding:1.5px 6px;white-space:normal}
   .hint{color:var(--ink-3);font-size:13px;text-align:center;margin-top:9vh}
   .hint:not(:only-child){display:none}
-  .hint .mark{font-family:var(--serif);font-size:34px;font-weight:700;color:var(--ink);display:block;margin-bottom:10px}
+  .hint .mark{font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--ink);display:block;margin-bottom:10px}
   .hint .mark span{color:var(--accent)}
   .hint .tag{display:block;font-size:13.5px;color:var(--ink-2);max-width:460px;margin:0 auto 4px}
   .actions{display:flex;gap:6px;margin-top:12px}
-  .actions button{font-size:11px;padding:3px 10px;background:transparent;color:var(--ink-3);
-    border:1px solid var(--line);border-radius:5px}
-  .actions button:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .actions button{font-size:11px;padding:3px 12px;background:transparent;color:var(--ink-3);
+    border:1px solid var(--line);border-radius:999px}
+  .actions button:hover{color:var(--ink);border-color:var(--ink-3);background:var(--panel)}
   .foot{font-size:11px;color:var(--ink-3);text-align:center;padding:0 20px 10px;background:var(--ground)}
 
-  form{display:flex;gap:10px;padding:14px 24px 8px;background:var(--ground)}
-  form .inner{display:flex;gap:10px;flex:1;max-width:820px;margin:0 auto;background:var(--surface);
-    border:1px solid var(--line-2);border-radius:12px;padding:8px;box-shadow:var(--shadow)}
-  form .inner:focus-within{border-color:var(--accent)}
-  textarea{flex:1;resize:none;border:none;padding:8px 10px;
-    font-family:var(--sans);font-size:14.5px;background:transparent;color:var(--ink);height:40px}
+  form{display:flex;gap:10px;padding:12px 24px 8px;background:var(--ground)}
+  form .inner{display:flex;gap:8px;flex:1;max-width:780px;margin:0 auto;background:var(--surface);
+    border:1px solid var(--line-2);border-radius:26px;padding:6px 6px 6px 14px;box-shadow:var(--shadow);
+    align-items:flex-end}
+  form .inner:focus-within{border-color:var(--ink-3)}
+  textarea{flex:1;resize:none;border:none;padding:8px 4px;
+    font-family:var(--sans);font-size:15px;background:transparent;color:var(--ink);height:40px}
   textarea:focus{outline:none}
+  #send{border-radius:999px;padding:9px 18px}
   @media (max-width: 860px){
     aside{display:none}
     body.showpanel aside{display:flex;position:fixed;top:0;left:0;bottom:0;width:min(320px,85vw);
@@ -120,7 +112,7 @@
 <header>
   <div class="logo">Tax<span>Pilot</span></div>
   <div class="sub">Public CbCR advisory agent · Directive (EU) 2021/2101 &amp; national transpositions</div>
-  <button id="newchat" class="ghost" style="margin-left:auto;background:transparent;color:var(--ink-3);border:1px solid var(--line)">New chat</button>
+  <button id="newchat" class="ghost">New chat</button>
   <div id="status" class="st-warn" title="Click to change the API key" style="margin-left:0">checking…</div>
 </header>
 <main>
