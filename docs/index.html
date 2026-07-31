@@ -129,14 +129,22 @@
 <script src="context.js?v=1"></script>
 <script>
 const CORPUS = [
-  {v:"VERIFIED", t:"Directive (EU) 2021/2101 — public CbCR (EN, EUR-Lex)"},
-  {v:"VERIFIED", t:"Directiva (UE) 2021/2101 — Spanish official version (equally authentic)"},
-  {v:"VERIFIED", t:"Ley 22/2015 de Auditoría de Cuentas (BOE, consolidated) — DA 11ª, Spanish transposition"},
-  {v:"VERIFIED", t:"EU list of non-cooperative jurisdictions — official Commission record (to Feb 2026)"},
-  {v:"VERIFIED", t:"Commission Implementing Regulation (EU) 2024/2952 — common template & XBRL formats"},
-  {v:"VERIFIED", t:"ICAC — BOICAC 144/2025 query 5 (EU-parent subsidiaries criterion)"},
-  {v:"VERIFIED", t:"DGSJFP Resolution 19 May 2026 — Registro Mercantil filing model «IP»"},
-  {v:"SECONDARY", t:"Jurisdiction matrix EU-27 + EEA + Australia (PwC tracker — pending official verification)"},
+  {v:"VERIFIED", t:"Directive (EU) 2021/2101 — public CbCR (EN, EUR-Lex)",
+   u:"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32021L2101"},
+  {v:"VERIFIED", t:"Directiva (UE) 2021/2101 — Spanish official version (equally authentic)",
+   u:"https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32021L2101"},
+  {v:"VERIFIED", t:"Ley 22/2015 de Auditoría de Cuentas (BOE, consolidated) — DA 11ª, Spanish transposition",
+   u:"https://www.boe.es/buscar/act.php?id=BOE-A-2015-8147"},
+  {v:"VERIFIED", t:"EU list of non-cooperative jurisdictions — official Commission record (to Feb 2026)",
+   u:"https://www.consilium.europa.eu/en/policies/eu-list-of-non-cooperative-jurisdictions/"},
+  {v:"VERIFIED", t:"Commission Implementing Regulation (EU) 2024/2952 — common template & XBRL formats",
+   u:"https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R2952"},
+  {v:"VERIFIED", t:"ICAC — BOICAC 144/2025 query 5 (EU-parent subsidiaries criterion)",
+   u:"https://www.icac.gob.es/sites/default/files/2026-01/Consulta%205%20rv.pdf"},
+  {v:"VERIFIED", t:"DGSJFP Resolution 19 May 2026 — Registro Mercantil filing model «IP»",
+   u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-11582"},
+  {v:"SECONDARY", t:"Jurisdiction matrix EU-27 + EEA + Australia (PwC tracker — pending official verification)",
+   u:"https://www.pwc.com/gx/en/services/tax/eu-pcbcr-reporting-tracker.html"},
 ];
 
 const thread = document.getElementById("thread");
@@ -160,7 +168,9 @@ function refreshStatus(){
 
 function init(){
   document.getElementById("corpuslist").innerHTML = CORPUS.map(d =>
-    `<div class="doc${d.v==="SECONDARY"?" sec":""}"><div class="v">${d.v==="VERIFIED"?"✓":"◌"} ${d.v}</div>${d.t}</div>`).join("");
+    `<a class="doc${d.v==="SECONDARY"?" sec":""}" href="${d.u}" target="_blank" rel="noopener"
+        style="display:block;text-decoration:none;color:inherit" title="Open the official source">
+       <div class="v">${d.v==="VERIFIED"?"✓":"◌"} ${d.v} ↗</div>${d.t}</a>`).join("");
   refreshStatus();
 }
 init();
