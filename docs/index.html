@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TaxPilot — Public CbCR advisory</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310a37f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='19' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e3a8a'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='19' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 <style>
   :root{
     --ground:#ffffff; --surface:#ffffff; --panel:#f9f9f9; --ink:#0d0d0d; --ink-2:#5d5d5d; --ink-3:#8f8f8f;
-    --line:#ececec; --line-2:#d9d9d9; --accent:#10a37f; --accent-2:#0d8a6a; --accent-soft:#e7f6f1;
-    --bubble:#f4f4f4;
+    --line:#ececec; --line-2:#d9d9d9; --accent:#1e3a8a; --accent-2:#16295f; --accent-soft:#eaeffb;
+    --bubble:#f4f4f4; --btn-ink:#ffffff;
     --warn:#b45309; --warn-soft:#fdf0dd; --crit:#c4402f; --crit-soft:#fdeceb;
     --shadow:0 1px 2px rgba(0,0,0,.04), 0 4px 16px -8px rgba(0,0,0,.08);
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -18,8 +18,8 @@
   }
   @media (prefers-color-scheme: dark){
     :root{--ground:#212121;--surface:#2a2a2a;--panel:#171717;--ink:#ececec;--ink-2:#b4b4b4;--ink-3:#8f8f8f;
-      --line:#323232;--line-2:#424242;--accent:#19c37d;--accent-2:#2ad48c;--accent-soft:#12352a;
-      --bubble:#2f2f2f;
+      --line:#323232;--line-2:#424242;--accent:#8ab0f8;--accent-2:#a3c2fa;--accent-soft:#1c2a4a;
+      --bubble:#2f2f2f; --btn-ink:#0d1b3d;
       --warn:#e0a04c;--warn-soft:#3a2d16;--crit:#e0705f;--crit-soft:#3a211c;
       --shadow:0 1px 2px rgba(0,0,0,.25), 0 6px 20px -10px rgba(0,0,0,.45)}
   }
@@ -58,7 +58,7 @@
   .keybox input{width:100%;border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;
     font-family:var(--mono);font-size:12px;background:var(--ground);color:var(--ink)}
   .keybox .row{display:flex;gap:6px;margin-top:9px}
-  button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);
+  button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--btn-ink);background:var(--accent);
     border:none;border-radius:999px;padding:7px 16px;cursor:pointer;transition:background .15s}
   button:hover{background:var(--accent-2)}
   button.ghost, #newchat{background:transparent;color:var(--ink-2);border:1px solid var(--line-2)}
