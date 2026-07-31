@@ -30,6 +30,8 @@
   #status{margin-left:auto;font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:99px;cursor:pointer}
   .st-ok{background:var(--accent-soft);color:var(--accent)}
   .st-warn{background:var(--warn-soft);color:var(--warn)}
+  .st-gear{background:transparent;color:var(--ink-3);font-size:15px;padding:2px 8px}
+  .st-gear:hover{color:var(--accent)}
 
   main{flex:1;display:flex;min-height:0}
   aside{width:300px;flex-shrink:0;border-right:1px solid var(--line);background:var(--surface);
@@ -147,7 +149,8 @@ function getKey(){ return localStorage.getItem("taxpilot_api_key") || ""; }
 function refreshStatus(){
   const kb = document.getElementById("keybox");
   if (getKey()){
-    statusEl.textContent = "ready · claude-sonnet-5"; statusEl.className = "st-ok";
+    statusEl.textContent = "⚙"; statusEl.className = "st-gear";
+    statusEl.title = "Settings (API key)";
     kb.style.display = "none";
   } else {
     statusEl.textContent = "set your API key ←"; statusEl.className = "st-warn";
