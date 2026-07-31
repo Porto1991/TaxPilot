@@ -54,6 +54,7 @@
   .st-warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
   .st-gear{background:transparent;color:var(--ink-3);font-size:15px;padding:2px 8px}
   .st-gear:hover{color:var(--accent)}
+  @media (min-width: 861px){ .st-gear{display:none} }
 
   main{flex:1;display:flex;min-height:0}
   aside{width:302px;flex-shrink:0;border-right:1px solid var(--line);background:var(--panel);
@@ -408,7 +409,10 @@ async function ask(q){
     if (!r.ok){
       let msg = `Error ${r.status}`;
       try{ const e = await r.json(); msg = e.error && e.error.message || msg; }catch(_){/*noop*/}
-      if (r.status === 401) msg = "Invalid API key — click 'Clear' on the left and paste it again.";
+      if (r.status === 401){
+        msg = "Invalid API key — click 'Clear' on the left and paste it again.";
+        document.getElementById("keybox").style.display = "";
+      }
       if (r.status === 400 && /credit/i.test(msg)) msg = "Your API credit balance is empty — top up at console.anthropic.com.";
       bubble.textContent = "⚠️ " + msg;
       history.pop();
