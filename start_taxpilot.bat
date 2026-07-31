@@ -1,7 +1,8 @@
 @echo off
-REM TaxPilot one-click launcher (Windows).
-REM Easiest setup: create a file named  anthropic_key.txt  in this folder
-REM containing only your API key (sk-ant-...). It will be loaded automatically.
+REM TaxPilot launcher (Windows). The server runs in a separate MINIMIZED window
+REM named "TaxPilot Server" so accidental Ctrl+C can't kill it.
+REM To stop TaxPilot: run stop_taxpilot.bat (or close the "TaxPilot Server"
+REM window from the taskbar).
 cd /d "%~dp0"
 
 if exist anthropic_key.txt (
@@ -17,8 +18,13 @@ if not exist .venv (
   .venv\Scripts\pip install -q -r requirements.txt
 )
 
-if "%ANTHROPIC_API_KEY%"=="" echo WARNING: ANTHROPIC_API_KEY not set - chat will show offline. Upload/analysis still work.
+if "%ANTHROPIC_API_KEY%"=="" echo WARNING: ANTHROPIC_API_KEY not set - chat will show offline. Create anthropic_key.txt with your key.
 
-echo TaxPilot running at http://localhost:8000  (close this window to stop)
+echo Starting the TaxPilot server in a minimized window...
+start "TaxPilot Server" /min .venv\Scripts\python.exe -m uvicorn app.main:app --port 8000
+timeout /t 3 >nul
 start "" http://localhost:8000
-.venv\Scripts\python -m uvicorn app.main:app --port 8000
+echo.
+echo TaxPilot is running at http://localhost:8000
+echo To stop it: double-click stop_taxpilot.bat
+timeout /t 6 >nul
