@@ -71,7 +71,12 @@
   textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
     font-family:var(--sans);font-size:14.5px;background:var(--ground);color:var(--ink);height:44px}
   textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
-  @media (max-width: 860px){ aside{display:none} }
+  @media (max-width: 860px){
+    aside{display:none}
+    body.showpanel aside{display:flex;position:fixed;top:0;left:0;bottom:0;width:min(320px,85vw);
+      z-index:20;box-shadow:4px 0 24px rgba(0,0,0,.25)}
+    body.showpanel::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:10}
+  }
 </style>
 </head>
 <body>
@@ -171,7 +176,14 @@ statusEl.addEventListener("click", ()=>{
   const kb = document.getElementById("keybox");
   const hidden = kb.style.display === "none";
   kb.style.display = hidden ? "" : (getKey() ? "none" : "");
+  document.body.classList.toggle("showpanel");
   if (hidden) document.getElementById("keyinput").focus();
+});
+document.addEventListener("click", e=>{
+  if (document.body.classList.contains("showpanel") &&
+      !e.target.closest("aside") && !e.target.closest("#status")){
+    document.body.classList.remove("showpanel");
+  }
 });
 
 function md(text){
