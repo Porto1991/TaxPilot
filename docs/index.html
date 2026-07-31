@@ -117,12 +117,6 @@
       <div class="hint">TaxPilot answers <b>only</b> from verified official sources and flags anything it cannot verify.<br>
       Every answer is a draft for professional review.</div>
     </div>
-    <div class="chips" id="chips">
-      <span class="chip">Spanish subsidiary of a US group with $900M revenue — obligations and deadlines?</span>
-      <span class="chip">Same case, but the ultimate parent is French — what changes?</span>
-      <span class="chip">Can we omit Panama data under the safeguard clause?</span>
-      <span class="chip">Which format is mandatory for the FY2025 report?</span>
-    </div>
     <form id="form">
       <textarea id="input" placeholder="Ask about public CbCR — any jurisdiction, any scenario… (Enter to send)"></textarea>
       <button type="submit" id="send">Send</button>
@@ -151,8 +145,6 @@ const CORPUS = [
 const SECONDARY = [
   {v:"EXCEL ⤓", t:"Jurisdiction matrix EU-27 + EEA + Australia — thresholds, deadlines, penalties (download .xlsx)",
    u:"pcbcr_jurisdiction_matrix.xlsx", dl:true},
-  {v:"SOURCE", t:"PwC EU public CbCR tracker (26 Jun 2026) — origin of the non-verified rows",
-   u:"https://www.pwc.com/gx/en/services/tax/eu-pcbcr-reporting-tracker.html"},
 ];
 
 const thread = document.getElementById("thread");
@@ -325,9 +317,6 @@ document.getElementById("form").addEventListener("submit", e=>{
 });
 document.getElementById("input").addEventListener("keydown", e=>{
   if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); document.getElementById("form").requestSubmit(); }
-});
-document.getElementById("chips").addEventListener("click", e=>{
-  if (e.target.classList.contains("chip")) ask(e.target.textContent);
 });
 </script>
 </body>
