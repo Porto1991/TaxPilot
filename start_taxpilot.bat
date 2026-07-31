@@ -1,7 +1,13 @@
 @echo off
 REM TaxPilot one-click launcher (Windows).
-REM Optional: set your API key first ->  set ANTHROPIC_API_KEY=sk-ant-...
+REM Easiest setup: create a file named  anthropic_key.txt  in this folder
+REM containing only your API key (sk-ant-...). It will be loaded automatically.
 cd /d "%~dp0"
+
+if exist anthropic_key.txt (
+  set /p ANTHROPIC_API_KEY=<anthropic_key.txt
+  echo API key loaded from anthropic_key.txt
+)
 
 where python >nul 2>nul || (echo ERROR: Python is not installed. Get it from https://python.org & pause & exit /b 1)
 

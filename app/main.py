@@ -22,7 +22,7 @@ from pathlib import Path
 
 import yaml
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from app.context import system_prompt
@@ -68,20 +68,34 @@ def corpus():
 
 @app.post("/api/chat")
 def chat(req: ChatRequest):
+    """Streams the answer as plain text chunks so the UI can render it live."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
         return JSONResponse(status_code=503, content={
             "error": "ANTHROPIC_API_KEY is not configured on the server. "
                      "Set it and restart to enable the chat."})
     import anthropic
     client = anthropic.Anthropic()
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=4000,
-        system=[{"type": "text", "text": system_prompt(),
-                 "cache_control": {"type": "ephemeral"}}],
-        messages=req.messages,
-    )
-    return {"answer": "".join(b.text for b in response.content if b.type == "text")}
+
+    def generate():
+        try:
+            with client.messages.stream(
+                model=MODEL,
+                max_tokens=4000,
+                system=[{"type": "text", "text": system_prompt(),
+                         "cache_control": {"type": "ephemeral"}}],
+                messages=req.messages,
+            ) as stream:
+                for text in stream.text_stream:
+                    yield text
+        except anthropic.APIConnectionError:
+            yield ("\n\n⚠️ Connection error reaching the Claude API — check the "
+                   "internet connection (a VPN such as NordVPN can block it).")
+        except anthropic.AuthenticationError:
+            yield "\n\n⚠️ Invalid API key — check ANTHROPIC_API_KEY and restart."
+        except Exception as exc:  # surface anything else in the chat, not a blank bubble
+            yield f"\n\n⚠️ Error: {exc}"
+
+    return StreamingResponse(generate(), media_type="text/plain; charset=utf-8")
 
 
 def _safe_name(name):

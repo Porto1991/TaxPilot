@@ -5,6 +5,12 @@
 set -e
 cd "$(dirname "$0")"
 
+# Easiest setup: put your API key (sk-ant-...) alone in a file named anthropic_key.txt here.
+if [ -f anthropic_key.txt ]; then
+  export ANTHROPIC_API_KEY="$(tr -d '[:space:]' < anthropic_key.txt)"
+  echo "› API key loaded from anthropic_key.txt"
+fi
+
 command -v python3 >/dev/null || { echo "ERROR: Python 3 is not installed (https://python.org)"; exit 1; }
 
 if [ ! -d .venv ]; then

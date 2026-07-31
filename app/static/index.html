@@ -61,6 +61,15 @@
   .hint code{font-family:var(--mono);background:var(--surface);border:1px solid var(--line);
     border-radius:4px;padding:1px 5px;font-size:11px}
 
+  .msg.bot h3{font-family:var(--serif);font-size:16px;margin:10px 0 4px}
+  .msg.bot ul{margin:4px 0;padding-left:20px}
+  .msg.bot li{margin:2px 0}
+  .msg.bot .cite{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);
+    border-radius:3px;padding:1px 5px;white-space:normal}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 10px;background:var(--surface)}
+  .chip{font-size:12.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);
+    border-radius:99px;padding:5px 12px;cursor:pointer}
+  .chip:hover{color:#fff;background:var(--accent)}
   form{display:flex;gap:10px;padding:14px 20px;background:var(--surface);border-top:1px solid var(--line)}
   textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
     font-family:var(--sans);font-size:14.5px;background:var(--ground);color:var(--ink);height:44px}
@@ -100,6 +109,12 @@
       <div class="hint">TaxPilot answers <b>only</b> from verified official sources and flags anything it cannot verify.<br>
       Every answer is a draft for professional review.</div>
     </div>
+    <div class="chips" id="chips">
+      <span class="chip">Spanish subsidiary of a US group with $900M revenue — obligations and deadlines?</span>
+      <span class="chip">Same case, but the ultimate parent is French — what changes?</span>
+      <span class="chip">Can we omit Panama data under the safeguard clause?</span>
+      <span class="chip">Which format is mandatory for the FY2025 report?</span>
+    </div>
     <form id="form">
       <textarea id="input" placeholder="Ask about public CbCR — any jurisdiction, any scenario… (Enter to send)"></textarea>
       <button type="submit" id="send">Send</button>
@@ -111,18 +126,22 @@
 const thread = document.getElementById("thread");
 const history = [];
 
+function md(text){
+  let h = text.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  h = h.replace(/^#{1,4} (.+)$/gm,"<h3>$1</h3>")
+       .replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+       .replace(/\[((?:Directive|Directiva|Ley|Reg|Art|DA|BOICAC|Commission|ICAC)[^\]\n]{0,120})\]/g,
+                '<span class="cite">$1</span>')
+       .replace(/^[-•] (.+)$/gm,"<li>$1</li>")
+       .replace(/(<li>.*<\/li>\n?)+/g, m => "<ul>" + m.replace(/\n/g,"") + "</ul>");
+  return h;
+}
+
 function add(cls, text){
   const d = document.createElement("div");
   d.className = "msg " + cls;
-  if (cls.includes("bot") && !cls.includes("mono")) {
-    d.innerHTML = text
-      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-      .replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
-      .replace(/^### (.+)$/gm,"<b>$1</b>")
-      .replace(/^## (.+)$/gm,"<b>$1</b>");
-  } else {
-    d.textContent = text;
-  }
+  if (cls.includes("bot") && !cls.includes("mono")) d.innerHTML = md(text);
+  else d.textContent = text;
   thread.appendChild(d);
   thread.scrollTop = thread.scrollHeight;
   return d;
@@ -168,22 +187,60 @@ document.getElementById("fileinput").addEventListener("change", async e=>{
   document.getElementById("uploadedlist").appendChild(row);
 });
 
-document.getElementById("form").addEventListener("submit", async e=>{
+async function ask(q){
+  add("user", q);
+  history.push({role:"user", content:q});
+  const bubble = add("bot", "");
+  const t0 = Date.now();
+  bubble.textContent = "Consulting the regulatory corpus…";
+  const timer = setInterval(()=>{
+    if (bubble.dataset.streaming) return;
+    bubble.textContent = `Consulting the regulatory corpus… ${Math.round((Date.now()-t0)/1000)}s`;
+  }, 1000);
+  try{
+    const r = await fetch("/api/chat", {method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({messages: history})});
+    if (!r.ok){
+      const data = await r.json().catch(()=>({}));
+      bubble.textContent = "⚠️ " + (data.error || `Error ${r.status}`);
+      history.pop();
+      return;
+    }
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let full = "";
+    while (true){
+      const {done, value} = await reader.read();
+      if (done) break;
+      full += dec.decode(value, {stream:true});
+      bubble.dataset.streaming = "1";
+      bubble.innerHTML = md(full);
+      thread.scrollTop = thread.scrollHeight;
+    }
+    bubble.innerHTML = md(full);
+    delete bubble.dataset.streaming;
+    history.push({role:"assistant", content:full});
+  }catch(err){
+    bubble.textContent = "⚠️ Connection lost: " + err.message;
+    history.pop();
+  }finally{
+    clearInterval(timer);
+    thread.scrollTop = thread.scrollHeight;
+  }
+}
+
+document.getElementById("form").addEventListener("submit", e=>{
   e.preventDefault();
   const input = document.getElementById("input");
   const q = input.value.trim();
   if (!q) return;
   input.value = "";
-  add("user", q);
-  history.push({role:"user", content:q});
-  const wait = add("bot", "…");
-  const r = await fetch("/api/chat", {method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({messages: history})});
-  const data = await r.json();
-  wait.remove();
-  if (data.answer){ add("bot", data.answer); history.push({role:"assistant", content:data.answer}); }
-  else { add("bot", "⚠️ " + (data.error || "Unexpected error")); history.pop(); }
+  ask(q);
+});
+
+document.getElementById("chips").addEventListener("click", e=>{
+  if (e.target.classList.contains("chip")) ask(e.target.textContent);
 });
 
 document.getElementById("input").addEventListener("keydown", e=>{
