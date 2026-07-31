@@ -384,14 +384,7 @@ async function ask(q){
   add("user", q);
   history.push({role:"user", content:q});
   const bubble = add("bot", "");
-  const t0 = Date.now();
-  bubble.innerHTML = '<span class="think"><span class="think-mark">T</span>' +
-    '<span>Consulting the regulatory corpus<span class="think-secs"></span></span></span>';
-  const timer = setInterval(()=>{
-    if (bubble.dataset.streaming) return;
-    const s = bubble.querySelector(".think-secs");
-    if (s) s.textContent = " · " + Math.round((Date.now()-t0)/1000) + "s";
-  }, 1000);
+  bubble.innerHTML = '<span class="think"><span class="think-mark">T</span></span>';
   const ctrl = new AbortController();
   let lastChunk = Date.now();
   const watchdog = setInterval(()=>{
@@ -472,7 +465,6 @@ async function ask(q){
       history.pop();
     }
   }finally{
-    clearInterval(timer);
     clearInterval(watchdog);
     delete bubble.dataset.streaming;
     busy = false;
