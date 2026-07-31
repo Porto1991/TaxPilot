@@ -270,9 +270,9 @@ function add(cls, text){
   return d;
 }
 
-function memoDoc(question, answer){
+function buildMemoHtml(question, answer, autoprint){
   const today = new Date().toLocaleDateString("en-GB", {day:"2-digit", month:"long", year:"numeric"});
-  const html = `<!doctype html><html><head><meta charset="utf-8">
+  return `<!doctype html><html><head><meta charset="utf-8">
   <title>TaxPilot memo — ${today}</title>
   <style>
     body{font-family:Georgia,"Palatino Linotype",serif;max-width:720px;margin:48px auto;
@@ -295,10 +295,27 @@ function memoDoc(question, answer){
   <div style="white-space:pre-wrap;margin-top:18px">${md(answer)}</div>
   <p class="disc">Draft prepared with AI assistance (TaxPilot). Subject to review by a qualified
   professional. This does not constitute definitive tax advice.</p>
-  <script>window.onload = () => { document.title = "TaxPilot memo"; };<\/script>
+  ${autoprint ? "<script>window.onload = () => setTimeout(() => window.print(), 400);<\/script>" : ""}
   </body></html>`;
-  const blob = new Blob([html], {type:"text/html"});
+}
+
+function memoDoc(question, answer){
+  const blob = new Blob([buildMemoHtml(question, answer, false)], {type:"text/html"});
   window.open(URL.createObjectURL(blob), "_blank");
+}
+
+function memoPdf(question, answer){
+  const blob = new Blob([buildMemoHtml(question, answer, true)], {type:"text/html"});
+  window.open(URL.createObjectURL(blob), "_blank");
+}
+
+function memoWord(question, answer){
+  const blob = new Blob(["﻿", buildMemoHtml(question, answer, false)], {type:"application/msword"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `taxpilot_memo_${new Date().toISOString().slice(0,10)}.doc`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function addActions(bubble, question, answer){
@@ -310,9 +327,17 @@ function addActions(bubble, question, answer){
                        setTimeout(()=>copy.textContent="Copy", 1500); };
   const memo = document.createElement("button");
   memo.textContent = "Memo";
-  memo.title = "Open as a formatted memo (print or save as PDF from the new tab)";
+  memo.title = "Open as a formatted memo in a new tab";
   memo.onclick = ()=> memoDoc(question, answer);
-  bar.append(copy, memo);
+  const pdf = document.createElement("button");
+  pdf.textContent = "PDF";
+  pdf.title = "Open the memo and print / save as PDF";
+  pdf.onclick = ()=> memoPdf(question, answer);
+  const word = document.createElement("button");
+  word.textContent = "Word";
+  word.title = "Download the memo as a .doc file";
+  word.onclick = ()=> memoWord(question, answer);
+  bar.append(copy, memo, pdf, word);
   bubble.appendChild(bar);
 }
 
