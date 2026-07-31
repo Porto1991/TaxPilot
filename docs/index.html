@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TaxPilot — Public CbCR advisory</title>
+<style>
+  :root{
+    --ground:#f6f8f7; --surface:#ffffff; --ink:#1a2321; --ink-2:#4c5854; --ink-3:#7b8683;
+    --line:#dfe5e2; --accent:#0e6b58; --accent-soft:#e3efeb; --warn:#a3650a; --warn-soft:#f7ecd9;
+    --crit:#b03a2e; --crit-soft:#f8e5e2;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --serif:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--ground:#111614;--surface:#1a211e;--ink:#e9eeec;--ink-2:#aeb9b4;--ink-3:#7e8a85;
+      --line:#2c3531;--accent:#53b89d;--accent-soft:#1d3a32;--warn:#d99a3d;--warn-soft:#3a2e17;
+      --crit:#e07a6d;--crit-soft:#3c211d}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;height:100vh;height:100dvh;display:flex;flex-direction:column;background:var(--ground);
+    color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.5}
+
+  header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--surface);
+    border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header .logo{font-family:var(--serif);font-size:20px;font-weight:600}
+  header .logo span{color:var(--accent)}
+  header .sub{color:var(--ink-3);font-size:12.5px}
+  #status{margin-left:auto;font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:99px;cursor:pointer}
+  .st-ok{background:var(--accent-soft);color:var(--accent)}
+  .st-warn{background:var(--warn-soft);color:var(--warn)}
+
+  main{flex:1;display:flex;min-height:0}
+  aside{width:300px;flex-shrink:0;border-right:1px solid var(--line);background:var(--surface);
+    padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+  aside h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);margin:0 0 8px}
+  .doc{padding:8px 10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;font-size:12.5px}
+  .doc .v{font-family:var(--mono);font-size:10px;color:var(--accent)}
+  .doc.sec .v{color:var(--warn)}
+
+  .keybox{border:1px solid var(--line);border-radius:8px;padding:12px}
+  .keybox p{font-size:12px;color:var(--ink-2);margin:0 0 8px}
+  .keybox input{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px 9px;
+    font-family:var(--mono);font-size:12px;background:var(--ground);color:var(--ink)}
+  .keybox .row{display:flex;gap:6px;margin-top:8px}
+  button{font-family:var(--sans);font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);
+    border:none;border-radius:6px;padding:6px 12px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--ink-3);border:1px solid var(--line)}
+  button:disabled{opacity:.5;cursor:default}
+
+  #chat{flex:1;display:flex;flex-direction:column;min-width:0}
+  #thread{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:14px}
+  .msg{max-width:760px;padding:12px 16px;border-radius:10px;white-space:pre-wrap;overflow-wrap:break-word}
+  .msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:3px}
+  .msg.bot{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:3px}
+  .msg b{font-weight:650}
+  .msg.bot h3{font-family:var(--serif);font-size:16px;margin:10px 0 4px;white-space:normal}
+  .msg.bot ul{margin:4px 0;padding-left:20px;white-space:normal}
+  .msg.bot li{margin:2px 0;white-space:pre-wrap}
+  .msg.bot .cite{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);
+    border-radius:3px;padding:1px 5px;white-space:normal}
+  .hint{align-self:center;color:var(--ink-3);font-size:12.5px;text-align:center;max-width:560px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 10px;background:var(--surface)}
+  .chip{font-size:12.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);
+    border-radius:99px;padding:5px 12px;cursor:pointer}
+  .chip:hover{color:#fff;background:var(--accent)}
+  form{display:flex;gap:10px;padding:14px 20px;background:var(--surface);border-top:1px solid var(--line)}
+  textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+    font-family:var(--sans);font-size:14.5px;background:var(--ground);color:var(--ink);height:44px}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  @media (max-width: 860px){ aside{display:none} }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Tax<span>Pilot</span></div>
+  <div class="sub">Public CbCR advisory agent · Directive (EU) 2021/2101 &amp; national transpositions</div>
+  <div id="status" class="st-warn" title="Click to change the API key">checking…</div>
+</header>
+<main>
+  <aside>
+    <div class="keybox" id="keybox">
+      <h3>API key</h3>
+      <p>Paste your Anthropic API key (sk-ant-…). It is stored <b>only in this browser</b> — never on any server.</p>
+      <input type="password" id="keyinput" placeholder="sk-ant-...">
+      <div class="row">
+        <button id="savekey">Save</button>
+        <button class="ghost" id="clearkey">Clear</button>
+      </div>
+    </div>
+    <div>
+      <h3>Ask a question</h3>
+      <p style="font-size:12.5px;color:var(--ink-2);margin:0">Answers cite the official corpus (article &amp; paragraph). Try one of the suggested questions below the chat.</p>
+    </div>
+    <div>
+      <h3>Corpus — official sources</h3>
+      <div id="corpuslist"></div>
+    </div>
+  </aside>
+
+  <div id="chat">
+    <div id="thread">
+      <div class="hint">TaxPilot answers <b>only</b> from verified official sources and flags anything it cannot verify.<br>
+      Every answer is a draft for professional review.</div>
+    </div>
+    <div class="chips" id="chips">
+      <span class="chip">Spanish subsidiary of a US group with $900M revenue — obligations and deadlines?</span>
+      <span class="chip">Same case, but the ultimate parent is French — what changes?</span>
+      <span class="chip">Can we omit Panama data under the safeguard clause?</span>
+      <span class="chip">Which format is mandatory for the FY2025 report?</span>
+    </div>
+    <form id="form">
+      <textarea id="input" placeholder="Ask about public CbCR — any jurisdiction, any scenario… (Enter to send)"></textarea>
+      <button type="submit" id="send">Send</button>
+    </form>
+  </div>
+</main>
+
+<script src="context.js?v=1"></script>
+<script>
+const CORPUS = [
+  {v:"VERIFIED", t:"Directive (EU) 2021/2101 — public CbCR (EN, EUR-Lex)"},
+  {v:"VERIFIED", t:"Directiva (UE) 2021/2101 — Spanish official version (equally authentic)"},
+  {v:"VERIFIED", t:"Ley 22/2015 de Auditoría de Cuentas (BOE, consolidated) — DA 11ª, Spanish transposition"},
+  {v:"VERIFIED", t:"EU list of non-cooperative jurisdictions — official Commission record (to Feb 2026)"},
+  {v:"VERIFIED", t:"Commission Implementing Regulation (EU) 2024/2952 — common template & XBRL formats"},
+  {v:"VERIFIED", t:"ICAC — BOICAC 144/2025 query 5 (EU-parent subsidiaries criterion)"},
+  {v:"VERIFIED", t:"DGSJFP Resolution 19 May 2026 — Registro Mercantil filing model «IP»"},
+  {v:"SECONDARY", t:"Jurisdiction matrix EU-27 + EEA + Australia (PwC tracker — pending official verification)"},
+];
+
+const thread = document.getElementById("thread");
+const statusEl = document.getElementById("status");
+const history = [];
+let busy = false;
+
+function getKey(){ return localStorage.getItem("taxpilot_api_key") || ""; }
+
+function refreshStatus(){
+  if (getKey()){ statusEl.textContent = "ready · claude-sonnet-5"; statusEl.className = "st-ok"; }
+  else { statusEl.textContent = "set your API key ←"; statusEl.className = "st-warn"; }
+}
+
+function init(){
+  document.getElementById("corpuslist").innerHTML = CORPUS.map(d =>
+    `<div class="doc${d.v==="SECONDARY"?" sec":""}"><div class="v">${d.v==="VERIFIED"?"✓":"◌"} ${d.v}</div>${d.t}</div>`).join("");
+  refreshStatus();
+}
+init();
+
+document.getElementById("savekey").addEventListener("click", ()=>{
+  const k = document.getElementById("keyinput").value.trim();
+  if (!k.startsWith("sk-ant-")){ alert("That does not look like an Anthropic API key (sk-ant-…)"); return; }
+  localStorage.setItem("taxpilot_api_key", k);
+  document.getElementById("keyinput").value = "";
+  refreshStatus();
+});
+document.getElementById("clearkey").addEventListener("click", ()=>{
+  localStorage.removeItem("taxpilot_api_key"); refreshStatus();
+});
+statusEl.addEventListener("click", ()=> document.getElementById("keyinput").focus());
+
+function md(text){
+  let h = text.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  h = h.replace(/^#{1,4} (.+)$/gm,"<h3>$1</h3>")
+       .replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+       .replace(/\[((?:Directive|Directiva|Ley|Reg|Art|DA|BOICAC|Commission|ICAC)[^\]\n]{0,120})\]/g,
+                '<span class="cite">$1</span>')
+       .replace(/^[-•] (.+)$/gm,"<li>$1</li>")
+       .replace(/(<li>.*<\/li>\n?)+/g, m => "<ul>" + m.replace(/\n/g,"") + "</ul>");
+  return h;
+}
+
+function add(cls, text){
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  if (cls.includes("bot")) d.innerHTML = md(text); else d.textContent = text;
+  thread.appendChild(d);
+  thread.scrollTop = thread.scrollHeight;
+  return d;
+}
+
+async function ask(q){
+  if (busy) return;
+  const key = getKey();
+  if (!key){
+    add("bot", "⚠️ Set your API key first — paste it in the box on the left (it stays in this browser only).");
+    document.getElementById("keyinput").focus();
+    return;
+  }
+  busy = true;
+  add("user", q);
+  history.push({role:"user", content:q});
+  const bubble = add("bot", "");
+  const t0 = Date.now();
+  bubble.textContent = "Consulting the regulatory corpus…";
+  const timer = setInterval(()=>{
+    if (bubble.dataset.streaming) return;
+    bubble.textContent = `Consulting the regulatory corpus… ${Math.round((Date.now()-t0)/1000)}s`;
+  }, 1000);
+  try{
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{
+        "content-type":"application/json",
+        "x-api-key": key,
+        "anthropic-version":"2023-06-01",
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body: JSON.stringify({
+        model:"claude-sonnet-5",
+        max_tokens:4000,
+        stream:true,
+        system:[{type:"text", text:window.TAXPILOT_SYSTEM, cache_control:{type:"ephemeral"}}],
+        messages:history
+      })
+    });
+    if (!r.ok){
+      let msg = `Error ${r.status}`;
+      try{ const e = await r.json(); msg = e.error && e.error.message || msg; }catch(_){/*noop*/}
+      if (r.status === 401) msg = "Invalid API key — click 'Clear' on the left and paste it again.";
+      if (r.status === 400 && /credit/i.test(msg)) msg = "Your API credit balance is empty — top up at console.anthropic.com.";
+      bubble.textContent = "⚠️ " + msg;
+      history.pop();
+      return;
+    }
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = "", full = "";
+    while (true){
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream:true});
+      const lines = buf.split("\n");
+      buf = lines.pop();
+      for (const line of lines){
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try{
+          const ev = JSON.parse(payload);
+          if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta"){
+            full += ev.delta.text;
+            bubble.dataset.streaming = "1";
+            bubble.innerHTML = md(full);
+            thread.scrollTop = thread.scrollHeight;
+          }
+          if (ev.type === "error"){
+            full += "\n\n⚠️ " + (ev.error && ev.error.message || "stream error");
+            bubble.innerHTML = md(full);
+          }
+        }catch(_){/* partial JSON across chunks is impossible: lines are complete */}
+      }
+    }
+    bubble.innerHTML = md(full || "⚠️ Empty response — try again.");
+    delete bubble.dataset.streaming;
+    if (full) history.push({role:"assistant", content:full}); else history.pop();
+  }catch(err){
+    bubble.textContent = "⚠️ Connection error: " + err.message + " — check internet (a VPN like NordVPN can block api.anthropic.com).";
+    history.pop();
+  }finally{
+    clearInterval(timer);
+    busy = false;
+    thread.scrollTop = thread.scrollHeight;
+  }
+}
+
+document.getElementById("form").addEventListener("submit", e=>{
+  e.preventDefault();
+  const input = document.getElementById("input");
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = "";
+  ask(q);
+});
+document.getElementById("input").addEventListener("keydown", e=>{
+  if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); document.getElementById("form").requestSubmit(); }
+});
+document.getElementById("chips").addEventListener("click", e=>{
+  if (e.target.classList.contains("chip")) ask(e.target.textContent);
+});
+</script>
+</body>
+</html>
