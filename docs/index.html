@@ -92,6 +92,14 @@
   .u-in{background:linear-gradient(135deg,#2a4ba6,#1e3a8a);color:#fff;padding:10px 16px;
     border-radius:18px 18px 5px 18px;max-width:75%;box-shadow:var(--shadow)}
   .msg.bot{background:transparent;border:none;padding:2px 4px}
+  .think{display:flex;align-items:center;gap:11px;color:var(--ink-3);font-size:13px}
+  .think-mark{position:relative;width:30px;height:30px;border-radius:9px;background:var(--btn-grad);
+    color:var(--btn-ink);display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:16px;flex-shrink:0;animation:thinkpulse 1.2s ease-in-out infinite}
+  .think-mark::after{content:"";position:absolute;inset:-4px;border-radius:12px;
+    border:2px solid var(--accent);opacity:0;animation:radar 1.2s ease-out infinite}
+  @keyframes thinkpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  @keyframes radar{0%{transform:scale(.9);opacity:.45}100%{transform:scale(1.25);opacity:0}}
   .msg b{font-weight:650}
   .msg.bot h3{font-size:15.5px;font-weight:700;margin:14px 0 5px;white-space:normal;color:var(--ink)}
   .msg.bot h3:first-child{margin-top:0}
@@ -377,10 +385,12 @@ async function ask(q){
   history.push({role:"user", content:q});
   const bubble = add("bot", "");
   const t0 = Date.now();
-  bubble.textContent = "Consulting the regulatory corpus…";
+  bubble.innerHTML = '<span class="think"><span class="think-mark">T</span>' +
+    '<span>Consulting the regulatory corpus<span class="think-secs"></span></span></span>';
   const timer = setInterval(()=>{
     if (bubble.dataset.streaming) return;
-    bubble.textContent = `Consulting the regulatory corpus… ${Math.round((Date.now()-t0)/1000)}s`;
+    const s = bubble.querySelector(".think-secs");
+    if (s) s.textContent = " · " + Math.round((Date.now()-t0)/1000) + "s";
   }, 1000);
   const ctrl = new AbortController();
   let lastChunk = Date.now();
