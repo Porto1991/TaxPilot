@@ -48,9 +48,8 @@
   header .logo{font-size:18px;font-weight:700;letter-spacing:-.02em}
   header .logo span{color:var(--accent)}
   header .sub{color:var(--ink-3);font-size:12.5px}
-  #newchat{margin-left:auto}
-  #status{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;cursor:pointer;
-    border:1px solid transparent}
+  #status{margin-left:auto;font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;
+    cursor:pointer;border:1px solid transparent}
   .st-ok{background:var(--accent-soft);color:var(--accent)}
   .st-warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
   .st-gear{background:transparent;color:var(--ink-3);font-size:15px;padding:2px 8px}
@@ -80,8 +79,8 @@
     transition:filter .15s, transform .1s}
   button:hover{filter:brightness(1.08)}
   button:active{transform:translateY(1px)}
-  button.ghost, #newchat{background:transparent;color:var(--ink-2);border:1px solid var(--line-2);box-shadow:none}
-  button.ghost:hover, #newchat:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);filter:none}
+  button.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line-2);box-shadow:none}
+  button.ghost:hover{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);filter:none}
   button:disabled{opacity:.5;cursor:default}
 
   #chat{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--ground)}
@@ -144,8 +143,7 @@
   <div class="logomark">T</div>
   <div class="logo">Tax<span>Pilot</span></div>
   <div class="sub">Public CbCR advisory agent · Directive (EU) 2021/2101 &amp; national transpositions</div>
-  <button id="newchat" class="ghost">New chat</button>
-  <div id="status" class="st-warn" title="Click to change the API key" style="margin-left:0">checking…</div>
+  <div id="status" class="st-warn" title="Click to change the API key">checking…</div>
 </header>
 <main>
   <aside>
@@ -482,17 +480,6 @@ document.getElementById("form").addEventListener("submit", e=>{
 });
 document.getElementById("input").addEventListener("keydown", e=>{
   if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); document.getElementById("form").requestSubmit(); }
-});
-document.getElementById("newchat").addEventListener("click", ()=>{
-  if (busy) return;
-  history.length = 0;
-  thread.innerHTML = '<div class="hint"><span class="mark">Tax<span>Pilot</span></span>' +
-    '<span class="tag">Expert answers on public country-by-country reporting, grounded in verified ' +
-    'official sources — with article-level citations, in English or Spanish.</span>' +
-    '<span class="feats"><span class="feat">7 official sources</span>' +
-    '<span class="feat">Article-level citations</span>' +
-    '<span class="feat">English · Español</span></span>' +
-    'Every answer is a draft for professional review.</div>';
 });
 </script>
 </body>
