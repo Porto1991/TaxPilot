@@ -48,13 +48,13 @@ def status():
     return {
         "api_key_configured": bool(os.environ.get("ANTHROPIC_API_KEY")),
         "model": MODEL,
-        "corpus_documents": len(yaml.safe_load((REPO / "corpus" / "index.yaml").read_text())["documents"]),
+        "corpus_documents": len(yaml.safe_load((REPO / "corpus" / "index.yaml").read_text(encoding="utf-8"))["documents"]),
     }
 
 
 @app.get("/api/corpus")
 def corpus():
-    data = yaml.safe_load((REPO / "corpus" / "index.yaml").read_text())
+    data = yaml.safe_load((REPO / "corpus" / "index.yaml").read_text(encoding="utf-8"))
     return {
         "documents": [
             {"id": d["id"], "title": d["title"], "verified": d.get("verified", False),

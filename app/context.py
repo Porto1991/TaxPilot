@@ -33,7 +33,7 @@ def grounding_blocks():
     """Returns the corpus as labelled text blocks for the system prompt."""
     return [
         ("CORPUS INDEX (corpus/index.yaml)",
-         (REPO / "corpus" / "index.yaml").read_text()),
+         (REPO / "corpus" / "index.yaml").read_text(encoding="utf-8")),
         ("DIRECTIVE (EU) 2021/2101 — OFFICIAL ENGLISH TEXT (EUR-Lex)",
          _pdf_text(REPO / "corpus" / "eu" / "2021-2101_directive_public_cbcr_EN.pdf")),
         ("SPAIN — LEY 22/2015, DA 11ª AND ART. 3 DEFINITIONS (BOE consolidated text, "
@@ -43,7 +43,7 @@ def grounding_blocks():
          + _pdf_text(REPO / "corpus" / "es" / "ley-22-2015_auditoria_consolidada_ES.pdf", 79, 85)),
         ("EU LIST OF NON-COOPERATIVE JURISDICTIONS — VERIFIED SNAPSHOTS "
          "(corpus/eu/eu_list_snapshots.yaml)",
-         (REPO / "corpus" / "eu" / "eu_list_snapshots.yaml").read_text()),
+         (REPO / "corpus" / "eu" / "eu_list_snapshots.yaml").read_text(encoding="utf-8")),
         ("ICAC CRITERION — BOICAC 144/2025 QUERY 5 (official, Spanish): ultimate parent "
          "resident in another Member State → that State's rules and deadlines govern",
          _pdf_text(REPO / "corpus" / "es" / "boicac144_consulta5_icac_ES.pdf")),
