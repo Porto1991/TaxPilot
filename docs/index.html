@@ -64,6 +64,11 @@
   .msg.bot .cite{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);
     border-radius:3px;padding:1px 5px;white-space:normal}
   .hint{align-self:center;color:var(--ink-3);font-size:12.5px;text-align:center;max-width:560px}
+  .actions{display:flex;gap:6px;margin-top:8px}
+  .actions button{font-size:11px;padding:3px 9px;background:transparent;color:var(--ink-3);
+    border:1px solid var(--line);border-radius:5px}
+  .actions button:hover{color:var(--accent);border-color:var(--accent)}
+  .foot{font-size:11px;color:var(--ink-3);text-align:center;padding:0 20px 8px;background:var(--surface)}
 
   .chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 10px;background:var(--surface)}
   .chip{font-size:12.5px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent);
@@ -85,7 +90,8 @@
 <header>
   <div class="logo">Tax<span>Pilot</span></div>
   <div class="sub">Public CbCR advisory agent · Directive (EU) 2021/2101 &amp; national transpositions</div>
-  <div id="status" class="st-warn" title="Click to change the API key">checking…</div>
+  <button id="newchat" class="ghost" style="margin-left:auto;background:transparent;color:var(--ink-3);border:1px solid var(--line)">New chat</button>
+  <div id="status" class="st-warn" title="Click to change the API key" style="margin-left:0">checking…</div>
 </header>
 <main>
   <aside>
@@ -100,7 +106,7 @@
     </div>
     <div>
       <h3>Ask a question</h3>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:0">Answers cite the official corpus (article &amp; paragraph). Try one of the suggested questions below the chat.</p>
+      <p style="font-size:12.5px;color:var(--ink-2);margin:0">Answers cite the official corpus (article &amp; paragraph) and flag anything not covered by it. Ask in English or Spanish.</p>
     </div>
     <div>
       <h3>Corpus — official sources</h3>
@@ -121,6 +127,7 @@
       <textarea id="input" placeholder="Ask about public CbCR — any jurisdiction, any scenario… (Enter to send)"></textarea>
       <button type="submit" id="send">Send</button>
     </form>
+    <div class="foot">Draft prepared with AI assistance — subject to review by a qualified professional. Do not enter confidential client data in this prototype.</div>
   </div>
 </main>
 
@@ -222,6 +229,37 @@ function add(cls, text){
   return d;
 }
 
+function memoDoc(question, answer){
+  const today = new Date().toLocaleDateString("en-GB", {day:"2-digit", month:"long", year:"numeric"});
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>TaxPilot memo</title></head>
+  <body style="font-family:Georgia,serif;max-width:700px;margin:40px auto;line-height:1.5">
+  <h1 style="font-size:20px">Memorandum — Public CbCR</h1>
+  <p><b>Date:</b> ${today}<br><b>Prepared with:</b> TaxPilot (AI-assisted)<br><b>Re:</b> ${question.replace(/</g,"&lt;")}</p>
+  <hr>${md(answer)}<hr>
+  <p style="font-size:12px;color:#666"><i>Draft prepared with AI assistance. Subject to review by a
+  qualified professional. This does not constitute definitive tax advice.</i></p></body></html>`;
+  const blob = new Blob(["﻿", html], {type:"application/msword"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `taxpilot_memo_${new Date().toISOString().slice(0,10)}.doc`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function addActions(bubble, question, answer){
+  const bar = document.createElement("div");
+  bar.className = "actions";
+  const copy = document.createElement("button");
+  copy.textContent = "Copy";
+  copy.onclick = ()=>{ navigator.clipboard.writeText(answer); copy.textContent = "Copied ✓";
+                       setTimeout(()=>copy.textContent="Copy", 1500); };
+  const memo = document.createElement("button");
+  memo.textContent = "Memo (.doc)";
+  memo.onclick = ()=> memoDoc(question, answer);
+  bar.append(copy, memo);
+  bubble.appendChild(bar);
+}
+
 async function ask(q){
   if (busy) return;
   const key = getKey();
@@ -296,7 +334,8 @@ async function ask(q){
     }
     bubble.innerHTML = md(full || "⚠️ Empty response — try again.");
     delete bubble.dataset.streaming;
-    if (full) history.push({role:"assistant", content:full}); else history.pop();
+    if (full){ history.push({role:"assistant", content:full}); addActions(bubble, q, full); }
+    else history.pop();
   }catch(err){
     bubble.textContent = "⚠️ Connection error: " + err.message + " — check internet (a VPN like NordVPN can block api.anthropic.com).";
     history.pop();
@@ -317,6 +356,11 @@ document.getElementById("form").addEventListener("submit", e=>{
 });
 document.getElementById("input").addEventListener("keydown", e=>{
   if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); document.getElementById("form").requestSubmit(); }
+});
+document.getElementById("newchat").addEventListener("click", ()=>{
+  if (busy) return;
+  history.length = 0;
+  thread.innerHTML = '<div class="hint">TaxPilot answers <b>only</b> from verified official sources and flags anything it cannot verify.<br>Every answer is a draft for professional review.</div>';
 });
 </script>
 </body>
