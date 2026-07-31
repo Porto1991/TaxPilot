@@ -231,19 +231,33 @@ function add(cls, text){
 
 function memoDoc(question, answer){
   const today = new Date().toLocaleDateString("en-GB", {day:"2-digit", month:"long", year:"numeric"});
-  const html = `<!doctype html><html><head><meta charset="utf-8"><title>TaxPilot memo</title></head>
-  <body style="font-family:Georgia,serif;max-width:700px;margin:40px auto;line-height:1.5">
-  <h1 style="font-size:20px">Memorandum — Public CbCR</h1>
-  <p><b>Date:</b> ${today}<br><b>Prepared with:</b> TaxPilot (AI-assisted)<br><b>Re:</b> ${question.replace(/</g,"&lt;")}</p>
-  <hr>${md(answer)}<hr>
-  <p style="font-size:12px;color:#666"><i>Draft prepared with AI assistance. Subject to review by a
-  qualified professional. This does not constitute definitive tax advice.</i></p></body></html>`;
-  const blob = new Blob(["﻿", html], {type:"application/msword"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `taxpilot_memo_${new Date().toISOString().slice(0,10)}.doc`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  const html = `<!doctype html><html><head><meta charset="utf-8">
+  <title>TaxPilot memo — ${today}</title>
+  <style>
+    body{font-family:Georgia,"Palatino Linotype",serif;max-width:720px;margin:48px auto;
+         line-height:1.55;color:#1a2321;padding:0 24px}
+    .brand{font-size:22px;font-weight:700}.brand span{color:#0e6b58}
+    .rule{border:none;border-top:2px solid #0e6b58;margin:14px 0 22px}
+    h1{font-size:19px}h3{font-size:16px;margin:18px 0 6px}
+    .meta{font-size:14px;color:#4c5854;background:#f2f6f4;border-radius:8px;padding:12px 16px}
+    .cite{font-family:Menlo,Consolas,monospace;font-size:11.5px;color:#0e6b58;
+          background:#e3efeb;border-radius:3px;padding:1px 5px}
+    ul{padding-left:22px}
+    .disc{font-size:12px;color:#777;font-style:italic;margin-top:26px;border-top:1px solid #ddd;padding-top:12px}
+    @media print{ body{margin:10mm auto} }
+  </style></head><body>
+  <div class="brand">Tax<span>Pilot</span> — Memorandum</div>
+  <hr class="rule">
+  <div class="meta"><b>Date:</b> ${today}<br>
+  <b>Re:</b> ${question.replace(/&/g,"&amp;").replace(/</g,"&lt;")}<br>
+  <b>Scope:</b> Public country-by-country reporting — Directive (EU) 2021/2101 and national transpositions</div>
+  <div style="white-space:pre-wrap;margin-top:18px">${md(answer)}</div>
+  <p class="disc">Draft prepared with AI assistance (TaxPilot). Subject to review by a qualified
+  professional. This does not constitute definitive tax advice.</p>
+  <script>window.onload = () => { document.title = "TaxPilot memo"; };<\/script>
+  </body></html>`;
+  const blob = new Blob([html], {type:"text/html"});
+  window.open(URL.createObjectURL(blob), "_blank");
 }
 
 function addActions(bubble, question, answer){
@@ -254,7 +268,8 @@ function addActions(bubble, question, answer){
   copy.onclick = ()=>{ navigator.clipboard.writeText(answer); copy.textContent = "Copied ✓";
                        setTimeout(()=>copy.textContent="Copy", 1500); };
   const memo = document.createElement("button");
-  memo.textContent = "Memo (.doc)";
+  memo.textContent = "Memo";
+  memo.title = "Open as a formatted memo (print or save as PDF from the new tab)";
   memo.onclick = ()=> memoDoc(question, answer);
   bar.append(copy, memo);
   bubble.appendChild(bar);
