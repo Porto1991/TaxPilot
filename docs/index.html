@@ -140,8 +140,14 @@ let busy = false;
 function getKey(){ return localStorage.getItem("taxpilot_api_key") || ""; }
 
 function refreshStatus(){
-  if (getKey()){ statusEl.textContent = "ready · claude-sonnet-5"; statusEl.className = "st-ok"; }
-  else { statusEl.textContent = "set your API key ←"; statusEl.className = "st-warn"; }
+  const kb = document.getElementById("keybox");
+  if (getKey()){
+    statusEl.textContent = "ready · claude-sonnet-5"; statusEl.className = "st-ok";
+    kb.style.display = "none";
+  } else {
+    statusEl.textContent = "set your API key ←"; statusEl.className = "st-warn";
+    kb.style.display = "";
+  }
 }
 
 function init(){
@@ -161,7 +167,12 @@ document.getElementById("savekey").addEventListener("click", ()=>{
 document.getElementById("clearkey").addEventListener("click", ()=>{
   localStorage.removeItem("taxpilot_api_key"); refreshStatus();
 });
-statusEl.addEventListener("click", ()=> document.getElementById("keyinput").focus());
+statusEl.addEventListener("click", ()=>{
+  const kb = document.getElementById("keybox");
+  const hidden = kb.style.display === "none";
+  kb.style.display = hidden ? "" : (getKey() ? "none" : "");
+  if (hidden) document.getElementById("keyinput").focus();
+});
 
 function md(text){
   let h = text.replace(/&/g,"&amp;").replace(/</g,"&lt;");
